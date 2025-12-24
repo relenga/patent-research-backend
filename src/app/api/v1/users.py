@@ -128,29 +128,6 @@ async def erase_db_user(
     return {"message": "User deleted from the database"}
 
 
-@router.get("/user/{username}/rate_limits", dependencies=[Depends(get_current_superuser)])
-async def read_user_rate_limits(
-    request: Request, username: str, db: Annotated[AsyncSession, Depends(async_get_db)]
-) -> dict[str, Any]:
-    db_user = await crud_users.get(db=db, username=username, schema_to_select=UserRead)
-    if db_user is None:
-        raise NotFoundException("User not found")
-
-    user_dict = dict(db_user)
-    if db_user["tier_id"] is None:
-        user_dict["tier_rate_limits"] = []
-        return user_dict
-
-    db_tier = await crud_tiers.get(db=db, id=db_user["tier_id"], schema_to_select=TierRead)
-    if db_tier is None:
-        raise NotFoundException("Tier not found")
-
-    db_rate_limits = await crud_rate_limits.get_multi(db=db, tier_id=db_tier["id"])
-
-    user_dict["tier_rate_limits"] = db_rate_limits["data"]
-
-    return user_dict
-
 
 @router.get("/user/{username}/tier")
 async def read_user_tier(
