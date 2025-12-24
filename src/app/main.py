@@ -3,36 +3,20 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-# Phase 1: Disable admin interface import
-# from .admin.initialize import create_admin_interface
 from .api import router
 from .core.config import settings
 from .core.setup import create_application, lifespan_factory
 
-# Phase 1: Disable admin interface
-# admin = create_admin_interface()
-admin = None
-
 
 @asynccontextmanager
-async def lifespan_with_admin(app: FastAPI) -> AsyncGenerator[None, None]:
-    """Custom lifespan that includes admin initialization."""
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """Application lifespan context manager."""
     # Get the default lifespan
     default_lifespan = lifespan_factory(settings)
 
-    # Run the default lifespan initialization and our admin initialization
+    # Run the default lifespan
     async with default_lifespan(app):
-        # Initialize admin interface if it exists
-        if admin:
-            # Initialize admin database and setup
-            await admin.initialize()
-
         yield
 
 
-app = create_application(router=router, settings=settings, lifespan=lifespan_with_admin)
-
-# Phase 1: Admin interface disabled
-# Mount admin interface if enabled
-# if admin:
-#     app.mount(settings.CRUD_ADMIN_MOUNT_PATH, admin.app)
+app = create_application(router=router, settings=settings, lifespan=lifespan)
