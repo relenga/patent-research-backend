@@ -107,7 +107,8 @@ Goal: Implement OCR, pipelines, and LLM-driven functionality
 - Remove related configuration
 - Ensure no Redis references remain
 
-**Status:** ⏳ Pending
+**Status:** ✅ Complete  
+**Commit:** Phase 1.4
 
 ---
 

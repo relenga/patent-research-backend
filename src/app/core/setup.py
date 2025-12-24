@@ -118,11 +118,8 @@ def create_application(
 
         - AppSettings: Configures basic app metadata like name, description, contact, and license info.
         - DatabaseSettings: Adds event handlers for initializing database tables during startup.
-        - RedisCacheSettings: Sets up event handlers for creating and closing a Redis cache pool.
-        - ClientSideCacheSettings: Integrates middleware for client-side caching.
+        - AppSettings: Configures basic app metadata like name, description, contact, and license info.
         - CORSSettings: Integrates CORS middleware with specified origins.
-        - RedisQueueSettings: Sets up event handlers for creating and closing a Redis queue pool.
-        - RedisRateLimiterSettings: Sets up event handlers for creating and closing a Redis rate limiter pool.
         - EnvironmentSettings: Conditionally sets documentation URLs and integrates custom routes for API documentation
           based on the environment type.
 
@@ -139,9 +136,8 @@ def create_application(
         A fully configured FastAPI application instance.
 
     The function configures the FastAPI application with different features and behaviors
-    based on the provided settings. It includes setting up database connections, Redis pools
-    for caching, queue, and rate limiting, client-side caching, and customizing the API documentation
-    based on the environment settings.
+    based on the provided settings. It includes setting up database connections and customizing 
+    the API documentation based on the environment settings.
     """
     # --- before creating application ---
     if isinstance(settings, AppSettings):
