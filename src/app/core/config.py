@@ -1,7 +1,7 @@
 import os
 from enum import Enum
 
-from pydantic import SecretStr, computed_field
+from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,13 +12,6 @@ class AppSettings(BaseSettings):
     LICENSE_NAME: str | None = None
     CONTACT_NAME: str | None = None
     CONTACT_EMAIL: str | None = None
-
-
-class CryptSettings(BaseSettings):
-    SECRET_KEY: SecretStr = SecretStr("secret-key")
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
 
 class DatabaseSettings(BaseSettings):
@@ -132,7 +125,6 @@ class Settings(
     AppSettings,
     SQLiteSettings,
     PostgresSettings,
-    CryptSettings,
     FirstUserSettings,
     TestSettings,
     RedisCacheSettings,

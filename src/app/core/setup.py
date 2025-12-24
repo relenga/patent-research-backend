@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 
-from ..api.dependencies import get_current_superuser
+from ..api.dependencies import rate_limiter_dependency
 from ..core.utils.rate_limit import rate_limiter
 from ..middleware.client_cache_middleware import ClientCacheMiddleware
 from ..models import *  # noqa: F403
@@ -228,7 +228,7 @@ def create_application(
         if settings.ENVIRONMENT != EnvironmentOption.PRODUCTION:
             docs_router = APIRouter()
             if settings.ENVIRONMENT != EnvironmentOption.LOCAL:
-                docs_router = APIRouter(dependencies=[Depends(get_current_superuser)])
+                docs_router = APIRouter()
 
             @docs_router.get("/docs", include_in_schema=False)
             async def get_swagger_documentation() -> fastapi.responses.HTMLResponse:

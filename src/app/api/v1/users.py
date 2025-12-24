@@ -1,18 +1,7 @@
-from typing import Annotated, Any
+from fastapi import APIRouter
 
-from fastapi import APIRouter, Depends, Request
-from fastcrud import PaginatedListResponse, compute_offset, paginated_response
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from ...api.dependencies import get_current_superuser, get_current_user
-from ...core.db.database import async_get_db
-from ...core.exceptions.http_exceptions import DuplicateValueException, ForbiddenException, NotFoundException
-from ...core.security import blacklist_token, get_password_hash, oauth2_scheme
-from ...crud.crud_rate_limit import crud_rate_limits
-from ...crud.crud_tier import crud_tiers
-from ...crud.crud_users import crud_users
-from ...schemas.tier import TierRead
-from ...schemas.user import UserCreate, UserCreateInternal, UserRead, UserTierUpdate, UserUpdate
+# Phase 1: Users functionality removed - authentication required
+router = APIRouter(tags=["users"])
 
 router = APIRouter(tags=["users"])
 
