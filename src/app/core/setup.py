@@ -101,31 +101,35 @@ def lifespan_factory(
         await set_threadpool_tokens()
 
         try:
-            if isinstance(settings, RedisCacheSettings):
-                await create_redis_cache_pool()
+            # Phase 1: Disable Redis/ARQ initialization
+            # if isinstance(settings, RedisCacheSettings):
+            #     await create_redis_cache_pool()
 
-            if isinstance(settings, RedisQueueSettings):
-                await create_redis_queue_pool()
+            # if isinstance(settings, RedisQueueSettings):
+            #     await create_redis_queue_pool()
 
-            if isinstance(settings, RedisRateLimiterSettings):
-                await create_redis_rate_limit_pool()
+            # if isinstance(settings, RedisRateLimiterSettings):
+            #     await create_redis_rate_limit_pool()
 
-            if create_tables_on_start:
-                await create_tables()
+            # Phase 1: Disable table creation to avoid external database requirement
+            # if create_tables_on_start:
+            #     await create_tables()
 
             initialization_complete.set()
 
             yield
 
         finally:
-            if isinstance(settings, RedisCacheSettings):
-                await close_redis_cache_pool()
+            # Phase 1: Disable Redis/ARQ cleanup
+            # if isinstance(settings, RedisCacheSettings):
+            #     await close_redis_cache_pool()
 
-            if isinstance(settings, RedisQueueSettings):
-                await close_redis_queue_pool()
+            # if isinstance(settings, RedisQueueSettings):
+            #     await close_redis_queue_pool()
 
-            if isinstance(settings, RedisRateLimiterSettings):
-                await close_redis_rate_limit_pool()
+            # if isinstance(settings, RedisRateLimiterSettings):
+            #     await close_redis_rate_limit_pool()
+            pass
 
     return lifespan
 
