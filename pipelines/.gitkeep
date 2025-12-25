@@ -1,0 +1,2 @@
+# This file ensures the pipelines/ directory is tracked by git
+# Directory reserved for data processing and workflow pipelines

@@ -1,0 +1,2 @@
+# This file ensures the state/ directory is tracked by git
+# Directory reserved for state management and persistence components
