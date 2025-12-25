@@ -12,11 +12,8 @@ from fastapi.openapi.utils import get_openapi
 
 from ..models import *  # noqa: F403
 from .config import (
-    AppSettings,
-    CORSSettings,
-    DatabaseSettings,
     EnvironmentOption,
-    EnvironmentSettings,
+    Settings,
     settings,
 )
 from .db.database import Base
@@ -36,12 +33,7 @@ async def set_threadpool_tokens(number_of_tokens: int = 100) -> None:
 
 
 def lifespan_factory(
-    settings: (
-        DatabaseSettings
-        | AppSettings
-        | CORSSettings
-        | EnvironmentSettings
-    ),
+    settings: Settings,
     create_tables_on_start: bool = True,
 ) -> Callable[[FastAPI], _AsyncGeneratorContextManager[Any]]:
     """Factory to create a lifespan async context manager for a FastAPI app."""
@@ -92,20 +84,15 @@ def lifespan_factory(
 # -------------- application --------------
 def create_application(
     router: APIRouter,
-    settings: (
-        DatabaseSettings
-        | AppSettings
-        | CORSSettings
-        | EnvironmentSettings
-    ),
+    settings: Settings,
     create_tables_on_start: bool = True,
     lifespan: Callable[[FastAPI], _AsyncGeneratorContextManager[Any]] | None = None,
     **kwargs: Any,
 ) -> FastAPI:
     """Creates and configures a FastAPI application based on the provided settings.
 
-    This function initializes a FastAPI application and configures it with various settings
-    and handlers based on the type of the `settings` object provided.
+    This function initializes a FastAPI application and configures it with the
+    provided Settings object containing app metadata, database, CORS, and environment configuration.
 
     Parameters
     ----------
@@ -117,11 +104,11 @@ def create_application(
         It determines the configuration applied:
 
         - AppSettings: Configures basic app metadata like name, description, contact, and license info.
-        - DatabaseSettings: Adds event handlers for initializing database tables during startup.
-        - AppSettings: Configures basic app metadata like name, description, contact, and license info.
-        - CORSSettings: Integrates CORS middleware with specified origins.
-        - EnvironmentSettings: Conditionally sets documentation URLs and integrates custom routes for API documentation
-          based on the environment type.
+        The Settings object containing all application configuration including:
+        - App metadata (name, description, contact, license info)
+        - Database configuration (PostgreSQL connection settings)
+        - CORS configuration (origins, methods, headers)
+        - Environment settings (local, staging, production)
 
     create_tables_on_start : bool
         A flag to indicate whether to create database tables on application startup.
@@ -140,17 +127,17 @@ def create_application(
     the API documentation based on the environment settings.
     """
     # --- before creating application ---
-    if isinstance(settings, AppSettings):
-        to_update = {
-            "title": settings.APP_NAME,
-            "description": settings.APP_DESCRIPTION,
-            "contact": {"name": settings.CONTACT_NAME, "email": settings.CONTACT_EMAIL},
-            "license_info": {"name": settings.LICENSE_NAME},
-        }
-        kwargs.update(to_update)
+    to_update = {
+        "title": settings.APP_NAME,
+        "description": settings.APP_DESCRIPTION,
+        "contact": {"name": settings.CONTACT_NAME, "email": settings.CONTACT_EMAIL},
+        "license_info": {"name": settings.LICENSE_NAME},
+        "version": settings.APP_VERSION,
+    }
+    kwargs.update(to_update)
 
-    if isinstance(settings, EnvironmentSettings):
-        kwargs.update({"docs_url": None, "redoc_url": None, "openapi_url": None})
+    # Disable docs in production
+    kwargs.update({"docs_url": None, "redoc_url": None, "openapi_url": None})
 
     # Use custom lifespan if provided, otherwise use default factory
     if lifespan is None:
@@ -161,34 +148,34 @@ def create_application(
 
 
 
-    if isinstance(settings, CORSSettings):
-        application.add_middleware(
-            CORSMiddleware,
-            allow_origins=settings.CORS_ORIGINS,
-            allow_credentials=True,
-            allow_methods=settings.CORS_METHODS,
-            allow_headers=settings.CORS_HEADERS,
-        )
+    # Add CORS middleware
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.CORS_ORIGINS,
+        allow_credentials=True,
+        allow_methods=settings.CORS_METHODS,
+        allow_headers=settings.CORS_HEADERS,
+    )
 
-    if isinstance(settings, EnvironmentSettings):
-        if settings.ENVIRONMENT != EnvironmentOption.PRODUCTION:
+    # Environment-specific documentation setup
+    if settings.ENVIRONMENT != EnvironmentOption.PRODUCTION:
+        docs_router = APIRouter()
+        if settings.ENVIRONMENT != EnvironmentOption.LOCAL:
             docs_router = APIRouter()
-            if settings.ENVIRONMENT != EnvironmentOption.LOCAL:
-                docs_router = APIRouter()
 
-            @docs_router.get("/docs", include_in_schema=False)
-            async def get_swagger_documentation() -> fastapi.responses.HTMLResponse:
-                return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
+        @docs_router.get("/docs", include_in_schema=False)
+        async def get_swagger_documentation() -> fastapi.responses.HTMLResponse:
+            return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
-            @docs_router.get("/redoc", include_in_schema=False)
-            async def get_redoc_documentation() -> fastapi.responses.HTMLResponse:
-                return get_redoc_html(openapi_url="/openapi.json", title="docs")
+        @docs_router.get("/redoc", include_in_schema=False)
+        async def get_redoc_documentation() -> fastapi.responses.HTMLResponse:
+            return get_redoc_html(openapi_url="/openapi.json", title="docs")
 
-            @docs_router.get("/openapi.json", include_in_schema=False)
-            async def openapi() -> dict[str, Any]:
-                out: dict = get_openapi(title=application.title, version=application.version, routes=application.routes)
-                return out
+        @docs_router.get("/openapi.json", include_in_schema=False)
+        async def openapi() -> dict[str, Any]:
+            out: dict = get_openapi(title=application.title, version=application.version, routes=application.routes)
+            return out
 
-            application.include_router(docs_router)
+        application.include_router(docs_router)
 
     return application

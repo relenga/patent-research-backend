@@ -119,7 +119,8 @@ Goal: Implement OCR, pipelines, and LLM-driven functionality
 - Remove background task registration
 - Remove worker-related code paths
 
-**Status:** ⏳ Pending
+**Status:** ✅ Complete  
+**Commit:** Phase 1.5
 
 ---
 

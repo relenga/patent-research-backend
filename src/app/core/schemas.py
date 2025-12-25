@@ -1,5 +1,5 @@
 import uuid as uuid_pkg
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from pydantic import BaseModel, Field, field_serializer
@@ -19,7 +19,6 @@ class ReadyCheck(BaseModel):
     version: str
     app: str
     database: str
-    redis: str
     timestamp: str
 
 
@@ -29,7 +28,7 @@ class UUIDSchema(BaseModel):
 
 
 class TimestampSchema(BaseModel):
-    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC).replace(tzinfo=None))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
     updated_at: datetime | None = Field(default=None)
 
     @field_serializer("created_at")
