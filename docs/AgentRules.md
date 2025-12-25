@@ -213,10 +213,12 @@ These rules govern:
 - Command execution
 - VS Code limitations
 - Windows-specific constraints
+- **Backend lifecycle management (human-controlled only)**
 
 If there is a conflict:
 - **AgentRules.md governs phase and architecture**
 - **CopilotRules.md governs execution and tooling**
+- **Backend start/stop is ALWAYS human-controlled**
 
 Both are mandatory.
 

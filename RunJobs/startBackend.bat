@@ -2,6 +2,15 @@
 REM Phase 1 startup - Start FastAPI server
 REM Assumes venv already created and synced
 
+echo.
+echo ================================================================
+echo REVEL HMI BACKEND STARTUP (Phase 1)
+echo ================================================================
+echo.
+echo WARNING: This is the ONLY supported backend startup mechanism
+echo Do NOT run uvicorn directly or use other startup methods
+echo.
+
 REM Change to project root directory
 cd /d "%~dp0\.."
 
@@ -24,3 +33,13 @@ echo ================================================================
 echo.
 
 uv run uvicorn src.app.main:app --host 127.0.0.1 --port 8008 --reload
+
+echo.
+echo ================================================================
+echo SERVER STOPPED
+echo ================================================================
+echo.
+echo The FastAPI server has stopped running.
+echo If this was unexpected, check the error messages above.
+echo.
+pause

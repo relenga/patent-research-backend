@@ -15,20 +15,34 @@ These rules are non-negotiable and apply to all Copilot assistance
      commands as actions.
    - Commands may be provided for reference only.
 
-2. **Copilot MUST NOT activate virtual environments via VS Code terminals**
+2. **Copilot MUST NOT run backend startup commands**
+   - ❌ FORBIDDEN: `uvicorn src.app.main:app --reload`
+   - ❌ FORBIDDEN: `uv run uvicorn src.app.main:app --reload`
+   - ❌ FORBIDDEN: `python -m src.app.main`
+   - ❌ FORBIDDEN: Any direct backend process initiation
+   - These commands cause system instability and resource conflicts
+
+3. **Backend Running Assumption (MANDATORY)**
+   - ASSUME the backend is already running unless user explicitly states otherwise
+   - Do not check backend status via commands or API calls
+   - Focus on code/documentation tasks, not process management
+   - If backend appears unresponsive, instruct user to use StartBackEnd.bat
+
+4. **Copilot MUST NOT activate virtual environments via VS Code terminals**
    - Do not run `Activate.ps1` or similar activation scripts in VS Code terminals
    - Do not use VS Code terminal-based environment activation
    - These operations cause terminal hangs and backend startup failures
 
-3. **All servers are started using Windows native terminals only**
+5. **All servers are started using Windows native terminals ONLY**
    via batch files in the `RunJobs/` directory:
-   - `RunJobs/StartBackEnd.bat`
-   - `RunJobs/StartBoth.bat`
+   - `RunJobs/startBackend.bat` - ONLY supported backend startup method
+   - `RunJobs/StartBoth.bat` - ONLY supported full-stack startup method
+   - NO other startup methods are supported or allowed
 
-4. Backend crashes that occur only in VS Code integrated terminals
+6. Backend crashes that occur only in VS Code integrated terminals
    are considered **environment artifacts**, not code defects.
 
-5. Copilot must not propose code changes whose sole purpose is to
+7. Copilot must not propose code changes whose sole purpose is to
    mitigate VS Code terminal crashes.
 
 **VIOLATION CONSEQUENCES**: VS Code terminal operations by Copilot cause:
@@ -36,6 +50,9 @@ These rules are non-negotiable and apply to all Copilot assistance
 - Backend startup failures (Exit Code: 1 patterns)
 - Terminal hangs requiring manual termination
 - Environment corruption affecting all subsequent operations
+- **System instability requiring machine restart**
+
+**BACKEND LIFECYCLE AUTHORITY**: Human developer controls all backend start/stop operations
 
 ## Terminal Command Execution Rules (CRITICAL)
 
