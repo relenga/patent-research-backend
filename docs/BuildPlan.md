@@ -41,10 +41,12 @@ Tag: `phase-0-complete`
 
 ---
 
-### Phase 1 — Prune (CURRENT)
+### Phase 1 — Prune (COMPLETING)
 Goal: Remove unused features, disable external infrastructure, and establish governance
 
 This phase focuses on **simplification and control**, not capability.
+
+**Status:** ⏳ P1.7 in progress, P1.8-P1.9 pending
 
 ---
 
@@ -132,20 +134,22 @@ Goal: Implement OCR, pipelines, and LLM-driven functionality
 - Ensure application starts with no `.env`
 - Ensure defaults are safe and minimal
 
-**Status:** ⏳ Pending
+**Status:** ✅ Complete  
+**Commit:** Phase 1.6
 
 ---
 
-### P1.7 Add Governance & AI Control Docs  
+### P1.7 Finalize Governance Documentation  
 **Maps to PRD:** §2.4 Add AI Governance
 
-- Add `docs/AgentRules.md`
-- Add `docs/PRD.md`
-- Add `docs/BuildPlan.md`
-- Add `docs/CopilotRules.md`
-- Cross-reference governance documents
+- Ensure all required governance documents exist and are complete
+- Add cross-references between AgentRules.md and CopilotRules.md
+- Verify PRD.md scope matches Phase 1 outcomes
+- Update BuildPlan.md to reflect completed P1.x task status
+- Ensure consistent phase numbering across all documents
 
-**Status:** ⏳ Pending
+**Status:** ✅ Complete  
+**Commit:** Phase 1.7
 
 ---
 

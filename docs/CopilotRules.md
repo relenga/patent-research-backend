@@ -3,6 +3,8 @@
 These rules are non-negotiable and apply to all Copilot assistance
 (code, debugging, prompts, and suggestions).
 
+**See also:** [AgentRules.md](AgentRules.md) for global agent governance and phase control rules.
+
 ## Execution Environment Rules
 
 **These rules apply to ALL Copilot assistance: Project Manager, Debugging, Development, Architecture, and Testing chats.**

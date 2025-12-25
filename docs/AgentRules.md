@@ -7,6 +7,8 @@
 This document defines **mandatory rules** for all AI agents (Copilot, ChatGPT, etc.) working in this repository.  
 The goal is to prevent architectural drift, premature implementation, and phase violations while maximizing development speed.
 
+**See also:** [CopilotRules.md](CopilotRules.md) for GitHub Copilot-specific execution environment rules.
+
 ---
 
 ## Global Rules (Apply to ALL Agents)
@@ -42,11 +44,11 @@ The goal is to prevent architectural drift, premature implementation, and phase 
 - Toolchain stabilization
 - No feature changes
 
-### Phase 1 — Prune (CURRENT)
-- Remove unused template features
-- Disable external infrastructure
-- Add governance & documentation
-- Prepare (but do not implement) structure
+### Phase 1 — Prune (COMPLETING)
+- Remove unused template features ✅
+- Disable external infrastructure ✅  
+- Add governance & documentation ⏳ (P1.7 in progress)
+- Prepare (but do not implement) structure ⏳ (P1.8 pending)
 
 ### Phase 2 — Harden (FUTURE)
 - Add `/common`
