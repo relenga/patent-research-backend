@@ -291,7 +291,8 @@ The following rules are documented during Phase 2 but not enforced until Phase 3
 - Document state machine behavior in comments
 - **FORBIDDEN:** State machine execution logic
 
-**Status:** ⏳ Pending
+**Status:** ✅ Complete  
+**Commit:** Phase 2.2
 
 ---
 
@@ -304,7 +305,8 @@ The following rules are documented during Phase 2 but not enforced until Phase 3
 - Create step validation interface definitions
 - **FORBIDDEN:** Pipeline execution or step implementations
 
-**Status:** ⏳ Pending
+**Status:** ✅ Complete  
+**Commit:** Phase 2.3
 
 ---
 
