@@ -333,7 +333,8 @@ The following rules are documented during Phase 2 but not enforced until Phase 3
 - Define tracking event types and schemas
 - **FORBIDDEN:** Tracking implementations or storage logic
 
-**Status:** ✅ Complete
+**Status:** ✅ Complete  
+**Commit:** Phase 2.5
 
 ---
 
