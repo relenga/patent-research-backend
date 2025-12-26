@@ -3,7 +3,7 @@
 
 ---
 
-## 1. Purpose
+## Purpose
 
 This document defines the **execution plan** for the project.  
 It translates **PRD requirements** into **ordered, phase-scoped tasks**.
@@ -16,7 +16,7 @@ Key principles:
 
 ---
 
-## 2. Task Numbering Convention
+## Task Numbering Convention
 
 All execution tasks follow this format:
 
@@ -31,7 +31,7 @@ Task numbers are **unique within a phase**, not global.
 
 ---
 
-## 3. Phase Overview
+## Phase Overview
 
 ### Phase 0 — Bootstrap (COMPLETE)
 Goal: Verify environment and toolchain
@@ -41,26 +41,50 @@ Tag: `phase-0-complete`
 
 ---
 
-### Phase 1 — Prune (COMPLETING)
+### Phase 1 — Prune (COMPLETE)
 Goal: Remove unused features, disable external infrastructure, and establish governance
 
 This phase focuses on **simplification and control**, not capability.
 
-**Status:** ⏳ P1.7 in progress, P1.8-P1.9 pending
+**Status:** ✅ Complete
+**Tag:** `phase-1-prune-complete`
 
 ---
 
-### Phase 2 — Harden (FUTURE)
+### Phase 2 — Harden (NEXT)
 Goal: Introduce structure, contracts, and enforcement
+
+**Status:** 🔄 Ready to begin
 
 ---
 
 ### Phase 3 — Build (FUTURE)
 Goal: Implement OCR, pipelines, and LLM-driven functionality
 
+**Status:** 🔮 Future - Planning deferred until Phase 2 completion
+
+**Functional Scope (Per Governance Docs):**
+- OCR functionality
+- Vectorization
+- LLM integration  
+- Research agents
+- Pipeline orchestration logic
+- Background task implementations
+- Database schema design (if needed)
+
+**Planning Approach:**
+- Detailed task breakdown will be defined as Phase 2 nears completion
+- Implementation order and technical decisions to be determined collaboratively
+- Task definitions will leverage Phase 2 contracts and structures
+
+**Phase 3 Gate:**
+- Cannot begin until Phase 2 is tagged complete
+- Requires Phase 2 contracts to be operational
+- Task planning session required before implementation begins
+
 ---
 
-## 4. Phase 1 — Prune (Detailed Task Plan)
+## Phase 1 — Prune (Completed Tasks)
 
 ### P1.1 Disable Redis / ARQ Startup  
 **Maps to PRD:** §2.2 Disable External Infrastructure
@@ -179,22 +203,165 @@ Use `.gitkeep` files as needed.
 
 **Tag:** `phase-1-prune-complete`
 
+**Status:** ✅ Complete  
+**Commit:** Phase 1.9
+
+---
+
+## Phase 2 — Harden (Structure & Contracts)
+
+**Citing PRD Phase 2 Intent:** Introduce structure, contracts, and enforcement WITHOUT implementation.
+
+**Phase 2 Rules:**
+- Create interfaces and contracts ONLY
+- NO business logic implementation
+- NO external service integration  
+- NO user-facing features
+- Structure preparation for Phase 3
+
+### Phase 2 — Pre-Execution Clarifications & Known Issues
+
+**ACKNOWLEDGED ITEMS** (Documentation only, not tasks):
+
+• **API Routing Policy Finalization** - Trailing slash policy must be chosen and documented in Phase 2, no enforcement until Phase 3, current Phase 1 behavior accepted as-is
+
+• **Testing Strategy Clarification** - No automated testing introduced in Phase 2, testing strategy deferred (Phase 3 or later), Phase 2 validation is structural not behavioral
+
+• **Persistence & Database Scope Boundary** - Phase 2 allows data models and interfaces only, no schema migrations, no storage engines, persistence decisions deferred
+
+• **Observability vs Logging Distinction** - Phase 2 defines logging interfaces only, metrics/tracing/alerting are out of scope, observability planning deferred
+
+• **Production & Deployment Concerns** - Docker, CI/CD, deployment are explicitly out of scope, no production hardening in Phase 2, these belong to future phase (unnumbered)
+
+• **Enforcement Timing Reminder** - Phase 2 documents invariants, Phase 3 enforces them, no enforcement logic allowed in Phase 2
+
+---
+
+### P2.1 Establish Common Services Skeleton
+**Maps to PRD:** Phase 2 structural preparation
+
+- Create `common/` module structure with empty classes
+- Define API routing invariants (slash, prefix, versioning)
+- Define canonical API response & error envelopes (schema only)
+- Define service interface contracts (no implementations):
+  - **Request/Execution Context Service**: request_id, trace/correlation metadata, lifecycle-safe propagation
+  - **Time/Clock Service**: Centralized UTC time source, mockable interface, no direct datetime.now() usage outside this service
+  - **ID Generation Service**: Canonical UUID/ULID generation, single interface for ID creation, no ad-hoc uuid usage in Phase 3
+  - **Logging Interface**: Structured logging contract, correlation via request_id
+- Add type hints and docstrings for intended behavior
+- Create `__init__.py` files with explicit exports
+- **FORBIDDEN:** Any business logic or external calls
+
+**Note:** All services are interfaces/abstract contracts only - no implementations, no runtime wiring, no external dependencies
+
 **Status:** ⏳ Pending
 
 ---
 
-## 5. Phase Transition Rules
+## Phase 2 Invariants (Documentation Only)
 
-Phase 2 (Harden) may not begin until:
+The following rules are documented during Phase 2 but not enforced until Phase 3:
 
-- All Phase 1 tasks are complete
-- Phase 1 acceptance criteria are met
-- Phase 1 is explicitly tagged
-- No Phase 1 violations remain
+**A) Async/Sync Execution Boundary Rule**
+- Async IO allowed in API and orchestration layers
+- CPU-bound work must be sync and isolated
+- Rule is documented only in Phase 2
+
+**B) API Routing Shape Invariant**
+- Single trailing-slash policy (choose one, document only)
+- Versioned prefix invariant (/api/v1)
+- No implicit index routes
+
+**C) API Response & Error Envelope Invariant**
+- Canonical success response schema
+- Canonical error response schema
+- Schema definition only (no enforcement yet)
 
 ---
 
-## 6. Authority & Enforcement
+### P2.2 Define Explicit Document State Machine
+**Maps to PRD:** Phase 2 lifecycle enforcement
+
+- Create `state/` module with document state enums
+- Define state transition rules as pure data structures
+- Add validation contracts (interfaces only)
+- Document state machine behavior in comments
+- **FORBIDDEN:** State machine execution logic
+
+**Status:** ⏳ Pending
+
+---
+
+### P2.3 Introduce Deterministic Pipeline Step Contracts
+**Maps to PRD:** Phase 2 pipeline preparation
+
+- Create `pipelines/` module with step interface definitions
+- Define input/output contracts for each pipeline stage
+- Add pipeline composition contracts (no orchestration)
+- Create step validation interface definitions
+- **FORBIDDEN:** Pipeline execution or step implementations
+
+**Status:** ⏳ Pending
+
+---
+
+### P2.4 Add Phase-Locked Feature Flags
+**Maps to PRD:** Phase 2 enforcement mechanisms
+
+- Create phase detection utilities
+- Add feature flag enforcement decorators (structure only)
+- Define phase violation exception types
+- Create phase boundary validation contracts
+- **FORBIDDEN:** Feature implementations behind flags
+
+**Status:** ⏳ Pending
+
+---
+
+### P2.5 Add Provenance & Lineage Tracking Contracts
+**Maps to PRD:** Phase 2 audit preparation
+
+- Define lineage data models in `common/models/`
+- Create provenance tracking interface contracts
+- Add audit trail data structure definitions
+- Define tracking event types and schemas
+- **FORBIDDEN:** Tracking implementations or storage logic
+
+**Status:** ⏳ Pending
+
+---
+
+### P2.6 Phase 2 Verification & Tag
+**Maps to PRD:** Phase 2 acceptance criteria
+
+- Verify all contracts are defined but not implemented
+- Verify no business logic exists in Phase 2 modules
+- Verify phase enforcement mechanisms exist
+- Verify structure is ready for Phase 3 implementation
+- Run comprehensive Phase 2 acceptance tests
+
+**Tag:** `phase-2-harden-complete`
+
+**Status:** ⏳ Pending
+
+---
+
+## Phase Transition Rules
+
+**Phase 2 (Harden) Requirements:**
+- Phase 1 must be explicitly tagged complete
+- All Phase 1 acceptance criteria met
+- No Phase 1 violations remain
+
+**Phase 3 (Build) Requirements:**
+- Phase 2 must be explicitly tagged complete
+- All contracts and structures defined
+- Phase enforcement mechanisms operational
+- No premature implementations exist
+
+---
+
+## Authority & Enforcement
 
 - This BuildPlan is **execution-authoritative**
 - PRD.md is **requirements-authoritative**
@@ -207,7 +374,7 @@ If conflicts arise:
 
 ---
 
-## 7. One-Line Summary
+## One-Line Summary
 
 > **BuildPlan.md defines how we move forward without breaking phase discipline.**
 

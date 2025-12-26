@@ -3,7 +3,7 @@
 
 ---
 
-## 1. Purpose
+## Purpose
 
 The purpose of **Phase 1 (Prune)** is to reduce the forked FastAPI boilerplate to a **minimal, predictable, and governable backend** that:
 
@@ -16,7 +16,7 @@ Phase 1 is about **removal, clarification, and control**, not adding capability.
 
 ---
 
-## 2. In Scope (Phase 1)
+## In Scope (Phase 1)
 
 Phase 1 includes **only** the following objectives.
 
@@ -117,7 +117,7 @@ Target directories to prepare:
 
 ---
 
-## 3. Explicitly Out of Scope (Phase 1)
+## Explicitly Out of Scope (Phase 1)
 
 The following items are **not allowed** in Phase 1 and must not be implemented or partially implemented:
 
@@ -136,7 +136,7 @@ Any attempt to introduce these is a **Phase violation**.
 
 ---
 
-## 4. Non-Goals
+## Non-Goals
 
 Phase 1 does NOT attempt to:
 
@@ -150,7 +150,7 @@ Success is defined by **simplicity and control**, not capability.
 
 ---
 
-## 5. Acceptance Criteria (Phase 1 Complete)
+## Acceptance Criteria (Phase 1 Complete)
 
 Phase 1 is complete when all of the following are true:
 
@@ -165,7 +165,7 @@ Phase 1 is complete when all of the following are true:
 
 ---
 
-## 6. Phase Transition Rule
+## Phase Transition Rule
 
 Phase 2 (Harden) may not begin until:
 
@@ -175,6 +175,6 @@ Phase 2 (Harden) may not begin until:
 
 ---
 
-## 7. One-Line Summary
+## One-Line Summary
 
 > **Phase 1 removes complexity and ambiguity so later phases can add structure safely.**
