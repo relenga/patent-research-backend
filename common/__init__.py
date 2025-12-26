@@ -19,6 +19,7 @@ from .phase_flags import (
     PhaseDetector, FeatureFlagEvaluator, PhaseBoundaryValidator, FeatureFlagRegistry,
     requires_phase, feature_flag, phase_boundary, deprecated_in_phase
 )
+from . import models
 
 __all__ = [
     # API contracts
@@ -64,4 +65,7 @@ __all__ = [
     "feature_flag",
     "phase_boundary",
     "deprecated_in_phase",
+    
+    # Data models
+    "models",
 ]
