@@ -208,9 +208,9 @@ class AuditTrail:
     description: str
     created_at: datetime
     created_by: str
+    metadata: AuditMetadata
     events: List[AuditEvent] = field(default_factory=list)
     entries: List[AuditEntry] = field(default_factory=list)
-    metadata: AuditMetadata
     filters: Dict[str, Any] = field(default_factory=dict)
     
     def add_event(self, event: AuditEvent) -> None:

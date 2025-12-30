@@ -175,6 +175,88 @@ Phase 2 (Harden) may not begin until:
 
 ---
 
+## Phase 2-3 Requirements Alignment
+
+**Note:** This PRD covers Phase 1 requirements only. Phase 2-3 requirements are execution-authoritative per BuildPlan.md.
+
+**Phase 2 Requirements:** Structure and contract definition per BuildPlan.md Phase 2 tasks
+
+**Phase 3 Requirements:** Core patent intelligence system implementation per BuildPlan.md P3.1-P3.12 tasks:
+- **P3.1-P3.2**: Database foundation and document lifecycle management
+- **P3.3-P3.4**: Document ingestion pipeline with OCR and image processing capabilities  
+- **P3.5-P3.6**: Corpus management with isolation and retrieval systems
+- **P3.7-P3.8**: Agent framework and patent analysis implementations
+- **P3.9**: Human-in-the-loop task workflows and review processes
+- **P3.10**: System logging, audit trails, and compliance infrastructure
+- **P3.11**: User interface for document processing and human review
+- **P3.12**: End-to-end integration and phase discipline verification
+
+**Legal & Business Acceptance Requirements:**
+- Corpus isolation prevents cross-contamination of patent prosecution and prior art analysis
+- Complete audit trails support litigation requirements and professional responsibility
+- Human review workflows ensure attorney oversight of AI-generated content
+- Agent boundary enforcement prevents unauthorized claim language generation
+- Provenance tracking enables verification of all analysis sources and reasoning
+
+**Context Documents:** SystemNarrative.md, PipelineStateMachine.md, CorpusModel.md, AgentResponsibilities.md, ProvenanceAudit.md provide implementation context and constraints.
+
+**Authority:** BuildPlan.md defines execution requirements. Design documents provide legal and technical constraints.
+
+---
+
+## Development Phase Summary (Extracted from ScopeByPhase.md)
+
+### Task Management System Status Summary
+
+**Overall Status:** ❌ Not Implemented
+
+- **Phase 1:** ✅ Background task infrastructure deliberately removed (ARQ/Redis)
+- **Phase 2:** ✅ HITL contracts and audit models defined as interfaces
+- **Phase 3:** ❌ Human-in-the-loop workflow implementation pending (P3.9)
+
+**Key Architecture:** Database-only task persistence, no queue system, state machine integration
+
+### Phase Summary Overview
+
+#### Phase 0 — Bootstrap ✅ COMPLETE
+**Goal:** Environment verification and toolchain stability  
+**Status:** Complete - Tagged `phase-0-complete`
+
+#### Phase 1 — Prune ✅ COMPLETE  
+**Goal:** Simplification and control through removal  
+**Status:** Complete - Tagged `phase-1-prune-complete`  
+**Details:** See Phase 1 requirements in this document above
+
+#### Phase 2 — Harden ✅ COMPLETE  
+**Goal:** Structure, contracts, and enforcement preparation  
+**Status:** Complete - Tagged `phase-2-harden-complete`  
+**Scope:** Contracts and interfaces ONLY - no implementations, no business logic, no external integrations
+
+#### Phase 3 — Build — DESIGN GATE CLOSED
+**Goal:** Feature implementation using Phase 2 contracts  
+**Gate Status:** CLOSED - Technical specifications completed and approved  
+**Human Approval:** All 5 critical technology decisions approved  
+**Implementation Authorization:** Ready for P3.1 execution upon human authorization
+
+**Planned Implementation Capabilities:**
+- Document upload, normalization, and text extraction (manual upload path)
+- OCR processing for images and scanned content with quality scoring
+- Corpus classification and isolation enforcement (Open Patent, Adversarial, Product, Guidance)
+- Agent execution within strict corpus and authority boundaries
+- Text chunking, embedding generation, and corpus-aware retrieval
+- Human-in-the-loop task generation, review workflows, and audit trails
+- Basic web interface for document management and human review tasks
+- Comprehensive system logging and event tracking
+
+**Critical Enforcement Boundaries:**
+- **Corpus Isolation:** Retrieval operations strictly limited to specified corpus
+- **Agent Authority:** Each agent limited to defined responsibilities and corpus access
+- **HITL Requirements:** Human approval mandatory for all claim outputs
+- **Audit Completeness:** All actions logged with immutable provenance tracking
+- **Phase Discipline:** No optimization, analytics, or production features
+
+---
+
 ## One-Line Summary
 
 > **Phase 1 removes complexity and ambiguity so later phases can add structure safely.**

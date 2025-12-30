@@ -143,8 +143,8 @@ class ProvenanceAssociation:
     activity_id: str
     agent_id: str
     role: str
-    plan_id: Optional[str] = None
     started_at: datetime
+    plan_id: Optional[str] = None
     ended_at: Optional[datetime] = None
     attributes: Dict[str, Any] = field(default_factory=dict)
 
