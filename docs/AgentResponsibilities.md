@@ -2,169 +2,257 @@
 
 **Authority**: Defines agent-specific corpus access permissions and operational boundaries
 **Corpus Business Rules**: [CorpusModel.md](CorpusModel.md) - AUTHORITATIVE corpus definitions and access matrix
-**Technical Enforcement**: [CorpusEnforcementSpec.md](design/phase-3-specs/CorpusEnforcementSpec.md) - Implementation of corpus restrictions
+**Technical Enforcement**: [CorpusEnforcementSpec.md](design/CorpusEnforcementSpec.md) - Implementation of corpus restrictions
 
 ## Document Authority
 
 This document defines **what each agent is allowed to do**, what it **must not do**, and **which corpora each agent may access** per CorpusModel.md business rules.
 
-**Corpus Compliance**: All agent corpus access must comply with CorpusModel.md access matrix. CorpusEnforcementSpec.md implements technical enforcement of these rules.
+---
 
-This document governs **authority boundaries and decision rights**, not implementation details.
+## Prompt Registry & Parameter Schema (UI-Editable Enforcement)
 
-If there is a conflict, the following precedence applies:
-1. AgentRules.md (authoritative governance)
-2. BuildPlan.md
-3. This document
+**CRITICAL ENFORCEMENT**: All UI-editable agent prompts must conform to **Prompt Registry + Parameter Schema** architecture:
+
+### Prompt Registry Structure
+- **Base Template**: Fixed legal/rubric rules and constraints (non-editable)
+- **Parameter Schema**: Defined editable parameters with validation rules
+- **Style/Focus Parameters**: User-controllable within legal bounds
+- **Constraint Inheritance**: All prompts inherit phase discipline and corpus rules
+
+### UI-Editable Parameters (ALLOWED)
+- **Focus Areas**: Emphasis on specific claim types or patent sections
+- **Drafting Style**: Verbosity, technical depth, explanatory detail
+- **Scope Preferences**: Broad vs. narrow claim scope guidance
+- **Avoidance Emphasis**: Specific prior art patterns to avoid
+- **Exclusions**: Topics or approaches to de-emphasize
+
+### UI-NON-Editable Elements (FORBIDDEN)
+- **Legal Standards**: Patentability requirements, statutory criteria
+- **Corpus Access Rules**: Which corpora agents may access
+- **Risk Scoring Rubrics**: Objective assessment criteria  
+- **Phase Discipline Rules**: What may be implemented in current phase
+- **Audit Requirements**: Provenance tracking and evidence standards
+
+### Implementation Requirements
+- **Parameter Validation**: All UI inputs validated against parameter schema
+- **Audit Logging**: All prompt modifications logged with user identity and timestamp
+- **Version Control**: Prompt changes tracked with rollback capability
+- **Legal Review**: Prompt templates reviewed for professional responsibility compliance
 
 ---
 
-## Corpus Access Compliance (MANDATORY)
+## Agent Responsibility Matrix (Complete Rewrite)
 
-**All agents must comply with [CorpusModel.md](CorpusModel.md) access matrix**:
+### Research Agent
+**Primary Function**: Document acquisition from external sources
+- **Corpus Access**: 🔄 ALL (for assignment purposes only)
+- **Allowed Actions**:
+  - USPTO patent database queries
+  - Google Patents API integration (Phase 4+)
+  - Office Action/IPR document retrieval
+  - Product documentation acquisition
+  - Source validation and metadata extraction
+- **UI-Editable Prompts**: ✅ Search targets, source priorities, acquisition scope
+- **Explicit Restrictions**:
+  - No document interpretation or analysis
+  - No corpus classification decisions (assignment only)
+  - No content generation or summarization
+- **Output**: Raw documents with source metadata for downstream processing
 
-✅ **AUTHORIZED Corpus Operations**:
-- Classification Agent: Access all corpora for document assignment
-- Prior Art Analysis Agent: Access Adversarial corpus for risk analysis ONLY
-- Claim Drafting Agent: Access Open Patent corpus ONLY for claim drafting
-- Product Mapping Agent: Access Product corpus for evidence mapping ONLY
+### Document Classification Agent  
+**Primary Function**: Document type and corpus assignment
+- **Corpus Access**: 🔄 ALL (for classification purposes only)
+- **Allowed Actions**:
+  - Document type detection (patent, prior_art, office_action, product_doc)
+  - Source type validation (manual_upload, research_agent)
+  - Initial corpus assignment per CorpusModel.md rules
+  - Metadata extraction and normalization
+- **UI-Editable Prompts**: ❌ None (objective classification only)
+- **Explicit Restrictions**:
+  - No content analysis beyond classification
+  - No claim drafting or language generation
+  - Classification decisions must follow CorpusModel.md rules exactly
+- **Output**: Structured classification labels with confidence scores
 
-❌ **FORBIDDEN Corpus Operations**:
-- ANY agent accessing Adversarial corpus for claim language
-- Claim Drafting Agent accessing ANY corpus except Open Patent
-- ANY cross-corpus contamination in agent inputs or outputs
+### Prior Art Analysis Agent
+**Primary Function**: Risk analysis and avoidance reasoning
+- **Corpus Access**: 🔴 Adversarial ONLY (prior art, OA, IPR documents)
+- **Allowed Actions**:
+  - Novelty risk identification (§102 analysis)
+  - Obviousness pattern detection (§103 analysis)
+  - Examiner reasoning extraction from Office Actions
+  - IPR invalidity argument analysis
+  - Claim vulnerability assessment
+- **UI-Editable Prompts**: ✅ Analysis emphasis, risk scoring focus, avoidance priorities  
+- **Explicit Restrictions**:
+  - **NEVER supplies claim language or positive claim support**
+  - No access to Open Patent Corpus for claim drafting
+  - Risk analysis only - no claim optimization suggestions
+  - May not override CorpusModel.md adversarial corpus constraints
+- **Output**: Risk assessments and avoidance recommendations (no claim text)
 
-**Enforcement**: CorpusEnforcementSpec.md implements runtime validation of these restrictions.
+### Product Mapping Agent
+**Primary Function**: Product-to-disclosure evidence mapping
+- **Corpus Access**: 🔵 Product Corpus ONLY + 🟢 Open Patent ONLY (for mapping)
+- **Allowed Actions**:
+  - Product feature identification and categorization
+  - Technical specification analysis
+  - Product-to-patent disclosure mapping
+  - Evidence bundle preparation for read-on analysis
+  - Infringement theory development support
+- **UI-Editable Prompts**: ✅ Mapping focus, technical depth, evidence priorities
+- **Explicit Restrictions**:
+  - No claim drafting or language generation
+  - No prior art or Office Action analysis (different corpus)
+  - Evidence collection only - no legal conclusions
+- **Output**: Product-to-disclosure mapping evidence (structured)
 
-## General Rules (Non-Negotiable)
+### Claim Drafting Agent
+**Primary Function**: Claim generation grounded exclusively in Open Patent Corpus
+- **Corpus Access**: 🟢 Open Patent Corpus ONLY
+- **Allowed Actions**:
+  - Independent claim drafting from patent specification
+  - Dependent claim generation based on independent claims
+  - Claim scope optimization within specification boundaries
+  - Support verification against patent disclosure
+  - Alternative claim embodiment generation
+- **UI-Editable Prompts**: ✅ LIMITED to style/scope/focus parameters within Prompt Registry
+- **Explicit Restrictions**:
+  - **MANDATORY CorpusModel.md compliance**: Open Patent Corpus ONLY
+  - No access to adversarial or product corpora for claim generation
+  - UI edits limited to predefined parameters (no freeform legal editing)
+  - All claim elements must trace to Open Patent Corpus support
+- **Output**: Draft claims with full Open Patent Corpus lineage
 
-- Agents may **only** perform actions explicitly listed here
-- Any ambiguity must be resolved conservatively
-- UI-editable prompts are **parameterized inputs**, not instructions
-- Legal standards, claim validity rules, and risk thresholds are **never user-editable**
-- Agents do **not** self-authorize scope expansion
-- All agent actions are provenance-tracked
+### Support Verification Agent  
+**Primary Function**: Claim support validation against patent specification
+- **Corpus Access**: 🟢 Open Patent Corpus ONLY
+- **Allowed Actions**:
+  - Claim element support verification
+  - Written description compliance checking
+  - Enablement requirement validation
+  - Best mode disclosure verification
+  - Indefiniteness analysis (clarity checking)
+- **UI-Editable Prompts**: ❌ None (objective verification only)
+- **Explicit Restrictions**:
+  - No claim rewriting or optimization
+  - Support verification only - no drafting assistance
+  - Fixed verification rubric (no UI customization)
+- **Output**: Support verification reports with specific citation mapping
+
+### Task Generation Agent (HITL)
+**Primary Function**: Human-in-the-loop workflow coordination  
+- **Corpus Access**: 🔄 Per task scope (varies by task type)
+- **Allowed Actions**:
+  - HITL task detection and trigger identification
+  - Evidence bundle assembly for human review
+  - Task metadata creation (priority, context, requirements)
+  - Human interface preparation and data marshaling
+  - Task completion workflow coordination
+- **UI-Editable Prompts**: ❌ None (objective task generation only)
+- **Explicit Restrictions**:
+  - **NEVER makes decisions or approvals** (human authority only)
+  - No outcome determination or result evaluation
+  - Task creation only - no task resolution
+  - Cannot override human decisions or bypass HITL requirements
+- **Output**: Structured HITL tasks with complete evidence context
+
+### Audit & Provenance Agent
+**Primary Function**: Lineage tracking and evidence chain maintenance
+- **Corpus Access**: 🔄 ALL (audit purposes only - no content generation)
+- **Allowed Actions**:
+  - Provenance record creation and linking
+  - Lineage graph maintenance and validation  
+  - Evidence chain verification and audit trail generation
+  - Compliance reporting and audit bundle preparation
+  - Immutable record preservation and integrity checking
+- **UI-Editable Prompts**: ❌ None (objective audit only)
+- **Explicit Restrictions**:
+  - No content analysis, judgment, or interpretation
+  - No decision-making or approval authority
+  - Audit trail integrity must never be compromised
+  - Read-only access for audit purposes
+- **Output**: Provenance records and audit reports (structured, immutable)
+
+### Orchestrator/Supervisor Agent
+**Primary Function**: Pipeline coordination and agent boundary enforcement
+- **Corpus Access**: ❌ None (coordination only)
+- **Allowed Actions**:
+  - Agent execution sequencing and workflow control
+  - Corpus access rule enforcement and violation detection
+  - Pipeline state management and transition control
+  - Error handling and recovery workflow coordination
+  - Resource allocation and agent boundary management
+- **UI-Editable Prompts**: ❌ None (system orchestration only)  
+- **Explicit Restrictions**:
+  - No content generation or analysis
+  - No corpus access for any content purposes
+  - Cannot override agent corpus restrictions or CorpusModel.md rules
+  - System coordination only - no business logic
+- **Output**: System coordination events and enforcement alerts
 
 ---
 
-## UI-Editable Prompt Enforcement (Critical)
+## Corpus Access Legend
 
-When an agent allows UI-editable input:
-
-- Inputs must bind to **predefined prompt templates**
-- Editable parameters are limited to:
-  - focus areas
-  - drafting emphasis
-  - verbosity
-  - stylistic preferences
-  - exclusions (what to avoid discussing)
-
-UI-editable prompts may **NOT**:
-- Define legal standards
-- Override statutory requirements
-- Change patentability criteria
-- Alter risk scoring rules
-- Introduce new objectives
-
-All prompt edits are:
-- Logged
-- Versioned
-- Auditable
+- **🟢 Open Patent**: Authorized for claim drafting per CorpusModel.md
+- **🔴 Adversarial**: Risk analysis ONLY - NO claim language per CorpusModel.md  
+- **🔵 Product**: Evidence mapping ONLY per CorpusModel.md
+- **🔄 Multiple/Scoped**: Access per specific operational need with restrictions
+- **❌ No Access**: System/orchestration agents only
 
 ---
 
-## Agent Responsibility Matrix
+## Cross-Corpus Contamination Prevention
 
-| Agent | Purpose | Corpus Access | UI-Editable Prompt | Explicit Restrictions |
-|-----|--------|---------------|-------------------|----------------------|
-| Research Agent | Acquire documents (patents, OA/IPR, prior art, product docs) | 🔄 ALL (assignment only) | ✅ Yes (targets, sources) | Cannot interpret, evaluate, or summarize |
-| Document Ingestion Agent | Normalize, extract text/images, OCR | 🔄 ALL (processing only) | ❌ No | No interpretation or classification |
-| Classification Agent | Assign `doc_type`, `source_type`, corpus membership | 🔄 ALL (assignment only) | ❌ No | No drafting or reasoning |
-| Prior Art Analysis Agent | Identify conflicts, novelty risks | 🔴 Adversarial ONLY | ✅ Yes (analysis emphasis only) | **NEVER supplies claim language** |
-| Office Action / IPR Analysis Agent | Extract examiner / PTAB reasoning | 🔴 Adversarial ONLY | ✅ Yes | No claim generation |
-| Product Mapping Agent | Map product features to disclosures | 🔵 Product ONLY | ✅ Yes | No claim drafting |
-| Claim Drafting Agent | Draft claims grounded **only** in open patent corpus | 🟢 Open Patent ONLY | ✅ Yes (limited) | **CorpusModel.md compliance mandatory** |
-| Claim Risk Evaluation Agent | Score §102/103/IPR risk | 🔴 Adversarial ONLY | ❌ No | Fixed rubric only |
-| Consistency / Support Agent | Verify claim support in spec | 🟢 Open Patent ONLY | ❌ No | No rewriting or optimization |
-| Revision / Optimization Agent | Revise claims based on feedback | 🟢 Open Patent ONLY | ❌ No | No freeform creativity |
-| Task Generation Agent (HITL) | Create human review tasks | 🔄 Per task scope | ❌ No | **Never makes decisions or approvals** |
-| Audit / Provenance Agent | Maintain lineage and evidence | 🔄 ALL (audit only) | ❌ No | No analysis or judgment |
-| Orchestrator / Supervisor Agent | Control sequencing and stopping | ❌ No corpus access | ❌ No | No content generation |
-| User Interaction Agent | Translate user intent into structured actions | ❌ No corpus access | ✅ Yes (light) | No analysis or drafting |
+**CRITICAL RULE**: No agent may combine corpus access for content generation:
 
-**Corpus Legend**:
-- 🟢 Open Patent: Claim drafting authorized per CorpusModel.md
-- 🔴 Adversarial: Risk analysis only – NO claim language per CorpusModel.md  
-- 🔵 Product: Evidence mapping only per CorpusModel.md
-- 🔄 Multiple: Access per specific operational need with restrictions
-- ❌ No corpus access: System/orchestration agents only
+- **Claim Drafting Agent**: Open Patent ONLY - no adversarial or product input
+- **Prior Art Analysis Agent**: Adversarial ONLY - no claim drafting capability  
+- **Product Mapping Agent**: Product + Open Patent for mapping ONLY - no claim generation
+- **All Other Agents**: Single corpus or orchestration/audit roles only
+
+**Violation Detection**: Orchestrator Agent monitors and blocks cross-corpus violations with immediate alert generation.
 
 ---
 
-## Prior Art Usage Boundary (Clarified)
+## HITL Decision Authority (Clarified)
 
-- Prior art **may be analyzed** to:
-  - identify risk
-  - highlight avoidance constraints
-  - flag vulnerabilities
-- Prior art **may NOT**:
-  - supply claim language
-  - be cited as affirmative support
-  - be used as drafting input
+**Human Authority Is Absolute**:
+- All agent outputs are **recommendations only**
+- Human decisions are **authoritative and final**
+- Agent recommendations cannot override human judgment
+- All human decisions are **logged with full provenance**
+- HITL task outcomes are **immutable once human-approved**
 
-Claims must be grounded **exclusively** in the open patent corpus.
-
----
-
-## HITL Task Generation Boundary (Clarified)
-
-The Task Generation Agent:
-
-**May:**
-- Detect when human input is required
-- Package evidence and context
-- Create structured tasks (verify, approve, annotate)
-
-**May NOT:**
-- Approve or reject claims
-- Resolve ambiguity
-- Choose outcomes
-- Score correctness
-
-All outcomes are decided by humans and recorded as provenance.
+**Agent Limitations**:
+- Task Generation Agent creates tasks but **never approves outcomes**
+- All agents **suggest and recommend only** 
+- **No agent has decision-making authority** over claim acceptance, diagram interpretation, or corpus assignment overrides
 
 ---
 
-## Diagram & Image Responsibilities (Alignment)
+## Diagram & Image Agent Responsibilities (Alignment)
 
-- Agents may identify duplicate or near-duplicate diagrams
-- Only humans may:
-  - approve canonical reuse
-  - mark diagrams as IGNORED
-- IGNORED diagrams:
-  - remain in lineage
-  - are excluded from retrieval and claim support
-  - remain visible in audit reports
+**Duplicate Detection**: Agents may identify potential duplicates using perceptual hashing
+**Human Decision Required**: Only humans may approve canonical reuse, mark diagrams IGNORED, or resolve near-duplicate ambiguity
+**IGNORED Diagram Handling**: 
+- Remains in full lineage with audit trail
+- Excluded from retrieval and claim support by default
+- Visible in audit reports and provenance tracking
+- Human rationale required and immutable
 
----
-
-## Authority Statement
-
-This document is authoritative for **agent behavior and boundaries**.
-
-Violations constitute governance failures and require rollback per AgentRules.md.
+**Cross-Corpus Diagram Reuse**: Most restrictive parent corpus rule applies (per CorpusModel.md)
 
 ---
 
-## Agent-to-BuildPlan Task Mapping
+## Enforcement & Monitoring
 
-| Agent | Primary BuildPlan Task | Secondary Tasks |
-|-------|----------------------|----------------|
-| Research Agent | P3.2 Document Ingestion | P3.5 Pipeline orchestration |
-| Classification Agent | P3.4 Corpus Construction | P3.5 Pipeline orchestration |
-| Prior Art Analysis Agent | P3.7 Claim Analysis Agents | P3.8 Claim Drafting System |
-| Claim Drafting Agent | P3.8 Claim Drafting System | P3.9 HITL Task System |
-| Task Generation Agent | P3.9 HITL Task System | P3.5 Pipeline orchestration |
-| Orchestrator Agent | P3.5 Pipeline Orchestration | All phases coordination |
+- **Real-time Monitoring**: All agent actions monitored for corpus compliance
+- **Violation Alerts**: Immediate notifications for any boundary violations  
+- **Audit Trail**: Complete agent action history with corpus access logging
+- **Human Override Authority**: Project Manager can override agent restrictions with justification
+- **Compliance Reporting**: Regular corpus access compliance verification and reporting
 
-**Note:** No agent may operate outside their assigned BuildPlan tasks.
+This specification ensures strict agent boundary enforcement while maintaining complete auditability and human oversight authority.

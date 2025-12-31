@@ -46,6 +46,50 @@ Defines LLM provider abstraction, prompt management, schema validation, retry st
 - [ ] Few-shot example injection
 - [ ] Token limit management and truncation
 
+## Versioning Policy
+
+### Prompt Templates
+
+#### Template Versioning Rules
+- **Prompt templates are versioned explicitly** with semantic version identifiers
+- **Prompt templates are immutable once used in a recorded agent execution**
+- **Changes to prompt templates result in a new version identifier** (e.g., v1.0 → v1.1)
+- **Historical prompt template versions are preserved** for audit and reproduction
+
+#### Version Management
+- **Active Version**: Current template version used for new agent executions
+- **Historical Versions**: All previous versions retained for lineage tracing
+- **Version References**: Agent execution logs reference specific prompt template versions
+- **Rollback Capability**: Previous template versions can be reactivated if needed
+
+### Diagram Descriptions
+
+#### Canonical Description Versioning
+- **Canonical descriptions are versioned** with unique version identifiers
+- **Reuse references a specific version** of the canonical description
+- **Updates do not overwrite historical versions** - new versions created instead
+- **Version Lineage**: Clear chain from original to current description version
+
+#### Description Evolution
+- **Incremental Updates**: Minor corrections create patch versions (v1.0 → v1.0.1)
+- **Substantial Changes**: Major revisions create minor versions (v1.0 → v1.1)
+- **Human Approval**: All description version changes require human approval
+- **Cross-Reference Updates**: Document references specify exact description version
+
+### Agent Outputs
+
+#### Output Versioning Rules
+- **All agent outputs are versioned artifacts** with unique identifiers
+- **Revisions create new outputs linked by lineage** - no destructive overwrites
+- **No destructive overwrites** - all agent outputs preserved permanently
+- **Version Relationships**: Clear parent-child relationships between output versions
+
+#### Output Evolution Tracking
+- **Original Output**: Initial agent response with v1.0 identifier
+- **Revised Outputs**: Human-requested revisions create v1.1, v1.2, etc.
+- **Lineage Preservation**: Complete chain from original through all revisions
+- **Audit Completeness**: All version changes logged with rationale and human identity
+
 ### Schema Validation of Outputs
 
 #### Response Schemas

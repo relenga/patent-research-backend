@@ -97,6 +97,48 @@ No claim element may cite adversarial corpus artifacts as support.
 
 ---
 
+## Diagrams & Images (AUTHORITATIVE RULES)
+
+### Corpus Inheritance for Diagrams
+
+**Rule**: Diagrams inherit corpus constraints from their parent source document.
+
+- **Open Patent Diagrams**: May support claim drafting when canonicalized
+- **Adversarial Corpus Diagrams**: Avoidance analysis only, never claim support
+- **Product Corpus Diagrams**: Read-on verification only, never claim support
+
+### Duplicate/Identical/Reused Handling
+
+**Canonical Description Authority**: When identical diagrams appear across documents:
+- **First processed diagram** establishes canonical description
+- **Subsequent identical diagrams** reference canonical description
+- **Corpus access follows MOST RESTRICTIVE** parent document
+
+**Example**: Same diagram in Open Patent (corpus: open) and Prior Art (corpus: adversarial)
+- Result: Diagram restricted to adversarial corpus constraints (avoidance only)
+- Reason: Most restrictive rule prevents corpus contamination
+
+### IGNORED Diagram Handling
+
+Diagrams marked as **IGNORED**:
+- **Stored + Auditable**: Full provenance trail preserved
+- **Excluded by Default**: Not retrieved for claim reasoning or evidence
+- **Audit Visible**: Remain visible in audit views and lineage reports
+- **Human Decision Required**: Only humans may mark diagrams IGNORED
+- **Required Rationale**: `ignored_reason` field mandatory
+
+**Common IGNORED reasons**: logos, advertisements, decorative elements, non-technical photos
+
+### Canonical Diagram Reuse Rules
+
+When reusing canonical descriptions across documents:
+- **Inherits corpus constraints** of the MOST RESTRICTIVE parent document
+- **Lineage tracking** maintains full reuse chain
+- **Human approval required** for cross-corpus canonical reuse
+- **Audit trail** records all reuse decisions and rationale
+
+---
+
 ## Relationship to Other Documents
 
 **CorpusModel.md** governs *where knowledge may be used*  
