@@ -2,6 +2,8 @@
 
 **Status**: APPROVED - OCR + Human Correction Approach Confirmed (Dec 30, 2025)  
 **Authority**: Technical implementation guidance for P3.4 OCR and Image Processing Pipeline  
+**Standards Compliance**: [Standards.md](../Standards.md) - MANDATORY common services usage, configuration patterns, and logging requirements  
+**Authority Position**: Guidance only - BuildPlan.md defines execution tasks and acceptance criteria
 **Cross-References**: [PipelineStateMachine.md](../PipelineStateMachine.md) (image states), [CorpusModel.md](../CorpusModel.md) (diagram corpus rules), [DataFlowDiagram.md](../DataFlowDiagram.md) (diagram flows), [HITLTaskSpec.md](./HITLTaskSpec.md) (human review integration)
 
 ## Authority Relationship

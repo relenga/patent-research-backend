@@ -1,7 +1,8 @@
 # Agent Responsibilities — Governed Patent Intelligence Backend
 
-**Authority**: Defines agent-specific corpus access permissions and operational boundaries
-**Corpus Business Rules**: [CorpusModel.md](CorpusModel.md) - AUTHORITATIVE corpus definitions and access matrix
+**Authority**: Defines agent-specific corpus access permissions and operational boundaries  
+**Technical Standards**: [Standards.md](./Standards.md) - MANDATORY common services and implementation standards  
+**Corpus Business Rules**: [CorpusModel.md](CorpusModel.md) - AUTHORITATIVE corpus definitions and access matrix  
 **Technical Enforcement**: [CorpusEnforcementSpec.md](design/CorpusEnforcementSpec.md) - Implementation of corpus restrictions
 
 ## Document Authority

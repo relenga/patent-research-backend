@@ -2,6 +2,7 @@
 
 **Status**: APPROVED - PostgreSQL Decision Confirmed (Dec 30, 2025)  
 **Authority**: Implementation guidance for P3.1 Database Schema & Persistence Layer  
+**Database Standards**: [Standards.md](../Standards.md) - MANDATORY persistence service usage, naming conventions, and session management  
 **Cross-References**: [CorpusModel.md](../../CorpusModel.md), [ProvenanceAudit.md](../../ProvenanceAudit.md), [PipelineStateMachine.md](../../PipelineStateMachine.md)
 
 ## Purpose

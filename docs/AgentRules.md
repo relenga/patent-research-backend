@@ -27,7 +27,17 @@ This document **replaces and supersedes**:
 
 1. **Human developer is the final authority**
 2. **This document governs AI behavior**
-3. **BuildPlan.md governs execution order**
+3. **[Standards.md](Standards.md) governs all technical standards and common services**
+4. **BuildPlan.md governs execution order**
+
+### Global Conflict-Handling Rule Reference
+**When conflicts arise with technical standards**: ALL agents and humans MUST follow the Global Conflict-Handling Rule defined in [Standards.md](Standards.md):
+- DO NOT auto-fix conflicts
+- DO NOT silently override standards  
+- FLAG conflicts explicitly
+- PROVIDE rationale for conflicts
+- PROPOSE resolution options
+- AWAIT human decision before proceeding
 4. **PRD.md governs scope**
 5. **If rules conflict, the most restrictive rule applies**
 6. **If uncertain, STOP and ask**

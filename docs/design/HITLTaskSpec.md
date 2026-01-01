@@ -1,12 +1,14 @@
-# HITL Task Specification — CONSOLIDATED TASK MANAGEMENT AUTHORITY
+# HITL Task Specification
 
 **Status**: APPROVED - FastAPI+HTMX UI and Single Reviewer Confirmed (Dec 30, 2025)  
-**Authority**: SINGLE AUTHORITY for all task management system requirements and implementation  
+**Authority**: Technical implementation guidance for task management system requirements  
+**Standards Compliance**: [Standards.md](../Standards.md) - MANDATORY common services usage, API patterns, and logging requirements  
+**Authority Position**: Guidance only - BuildPlan.md defines execution tasks and acceptance criteria  
 **Cross-References**: [PipelineStateMachine.md](../../PipelineStateMachine.md) (task triggers), [AgentResponsibilities.md](../../AgentResponsibilities.md) (task generation agents), [DatabaseSchemaSpec.md](./DatabaseSchemaSpec.md), [PipelineExecutionSpec.md](./PipelineExecutionSpec.md)
 
-## Consolidated Task Management Authority
+## Task Management Implementation Guidance
 
-**This document is the SINGLE SOURCE OF TRUTH for:**
+**This document provides implementation guidance for:**
 - Task lifecycle definitions and state management
 - HITL workflow requirements and implementation patterns  
 - Task assignment models and reviewer interaction

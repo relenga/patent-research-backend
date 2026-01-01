@@ -1,5 +1,8 @@
 # Phase 3 Configuration Variables Reference
 
+**Authority**: Quick reference for Phase 3 environment variables  
+**Complete Configuration Standards**: [Standards.md](../Standards.md) - MANDATORY Pydantic BaseSettings patterns, validation rules, and complete variable definitions
+
 ## Local LLM Configuration
 - `LLM_MODEL_NAME`: HuggingFace model identifier for patent intelligence
 - `LLM_MODEL_CACHE_DIR`: Local directory for model storage

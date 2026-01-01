@@ -2,6 +2,7 @@
 
 **Status**: APPROVED - FastAPI+HTMX UI and PostgreSQL Decisions Confirmed (Dec 30, 2025)  
 **Authority**: Implementation guidance for all P3.x tasks requiring API endpoints  
+**Implementation Standards**: [Standards.md](../Standards.md) - MANDATORY API conventions, response envelopes, and error handling  
 **Cross-References**: [common/api.py](../../../common/api.py), [DatabaseSchemaSpec.md](./DatabaseSchemaSpec.md)
 
 ## Purpose
@@ -58,10 +59,11 @@ Defines domain-specific API endpoints and request/response schemas for documents
 ### Request/Response Schemas
 
 #### Canonical Response Envelope
-- [ ] **Success Response**: Uses `APIResponse[T]` from common/api.py
-- [ ] **Error Response**: Uses `APIError` with ErrorCode enum
-- [ ] **Metadata Inclusion**: request_id, timestamp, correlation info
-- [ ] **Pagination Support**: Standard pagination metadata
+**Reference**: [Standards.md](../Standards.md) defines complete envelope specification  
+- [ ] **Success Response**: Uses `APIResponse[T]` from common/api.py per standards
+- [ ] **Error Response**: Uses `APIError` with ErrorCode enum per standards
+- [ ] **Metadata Inclusion**: request_id, timestamp, correlation info per standards
+- [ ] **Pagination Support**: Standard pagination metadata per standards
 
 #### Domain-Specific Schemas
 ```python
@@ -142,9 +144,9 @@ async def corpus_violation_handler(request: Request, exc: CorpusViolationError):
 ## Acceptance Criteria
 
 - [ ] All domain endpoints defined with complete schemas
-- [ ] Canonical response envelope used consistently
+- [ ] Canonical response envelope used consistently per [Standards.md](../Standards.md)
 - [ ] Input validation comprehensive and tested
-- [ ] Error handling follows established patterns
+- [ ] Error handling follows patterns per [Standards.md](../Standards.md)
 - [ ] Integration with database layer verified
 - [ ] Performance requirements met for API responses
 - [ ] Human reviewer approval obtained

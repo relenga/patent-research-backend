@@ -2,6 +2,7 @@
 
 **Status**: APPROVED - PyTorch+Transformers Decision Confirmed (Dec 30, 2025)  
 **Authority**: Implementation guidance for P3.7 Agent Execution Framework, P3.8 Core Agent Implementations  
+**Common Services Standards**: [Standards.md](../Standards.md) - MANDATORY service usage, versioning rules, and configuration patterns  
 **Cross-References**: [AgentResponsibilities.md](../../AgentResponsibilities.md), [DevelopmentEnvironment.md](../../DevelopmentEnvironment.md), [CorpusEnforcementSpec.md](./CorpusEnforcementSpec.md)
 
 ## Purpose

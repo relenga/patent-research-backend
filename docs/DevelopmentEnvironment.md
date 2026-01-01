@@ -2,6 +2,7 @@
 
 **Authority**: Hardware specifications and local development environment for Phase 3 implementation
 **Phase 3 Alignment**: Local-first LLM integration with PyTorch + Transformers stack
+**Environment Standards**: [Standards.md](Standards.md) - MANDATORY configuration patterns, versioning rules, and common service setup
 **Last Updated**: December 30, 2025
 
 ## Development Hardware Specifications

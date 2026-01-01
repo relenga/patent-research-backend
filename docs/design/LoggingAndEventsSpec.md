@@ -2,6 +2,7 @@
 
 **Status**: APPROVED - Comprehensive Audit + Performance Architecture (Dec 30, 2025)  
 **Authority**: Technical implementation guidance for P3.10 Logging and Event System Implementation  
+**Logging Standards**: [Standards.md](../Standards.md) - MANDATORY logging service usage, event taxonomy, and audit requirements  
 **Cross-References**: [PipelineStateMachine.md](../PipelineStateMachine.md) (state transitions), [CorpusModel.md](../CorpusModel.md) (corpus operations), [AgentResponsibilities.md](../AgentResponsibilities.md) (agent operations), [HITLTaskSpec.md](./HITLTaskSpec.md) (human decision events)
 
 ## Authority Relationship

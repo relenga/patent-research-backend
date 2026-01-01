@@ -179,6 +179,8 @@ Phase 2 (Harden) may not begin until:
 
 **Note:** This PRD covers Phase 1 requirements only. Phase 2-3 requirements are execution-authoritative per BuildPlan.md.
 
+**Technical Standards Authority:** [Standards.md](Standards.md) defines MANDATORY technical standards for all Phase 3 implementation. No feature or capability is considered delivered unless Standards.md compliance is verified and confirmed.
+
 **Phase 2 Requirements:** Structure and contract definition per BuildPlan.md Phase 2 tasks
 
 **Phase 3 Requirements:** Core patent intelligence system implementation per BuildPlan.md P3.1-P3.12 tasks:

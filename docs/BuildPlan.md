@@ -10,6 +10,8 @@ It translates **PRD requirements** into **ordered, phase-scoped tasks**.
 
 **EXECUTION AUTHORITY:** This BuildPlan is the sole authority for what tasks exist, their scope, and execution sequence. WBS.md provides implementation details only. Design documents provide context and constraints, not execution authority.
 
+**AUTHORITY CHAIN**: AgentRules.md (governance) → [Standards.md](Standards.md) (technical standards) → **BuildPlan.md (execution authority)** → WBS.md (implementation details) → Design specs (guidance only)
+
 Key principles:
 - PRD defines *what must be true*
 - BuildPlan defines *how and in what order we execute*
@@ -109,6 +111,12 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 
 ## Phase 3 — Build (Implementation Tasks)
 
+**MANDATORY COMPLIANCE FOR ALL PHASE 3 TASKS:**
+- **Must comply with [Standards.md](Standards.md)**: All tasks must implement required common services, API standards, configuration patterns, and logging requirements
+- **Pre-Development**: Review [Standards.md](Standards.md) and required common services before implementation
+- **Post-Development**: Confirm Standards.md compliance checklist completion
+- **Conflict Resolution**: Follow global conflict-handling rule for any standards conflicts
+
 ### P3.1 Database Schema & Persistence Layer
 **Maps to PRD:** Phase 3 data foundation requirements
 
@@ -133,6 +141,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - All state changes generate immutable audit events
 - Database starts from empty state using migrations
 - No direct database access outside this layer
+- **Must comply with [Standards.md](Standards.md)**: PostgreSQL persistence service usage, configuration patterns, and logging requirements verified
 
 **Status:** Not started
 
@@ -168,6 +177,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - State changes visible through logging and events with full audit trail
 - No pipeline step bypasses PipelineStateMachine.md state validation
 - All state transitions comply with PipelineStateMachine.md authority
+- **Must comply with [Standards.md](Standards.md)**: Common services usage, API patterns, configuration standards, and logging requirements verified
 
 **Status:** Not started
 
@@ -196,6 +206,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Document metadata populated automatically where possible
 - Failed uploads generate clear error messages
 - Original documents preserved alongside normalized text
+- **Must comply with [Standards.md](Standards.md)**: Common services usage, API standards, configuration patterns, and logging requirements verified
 
 **Status:** Not started
 
@@ -225,6 +236,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Duplicate images detected and flagged for review
 - OCR confidence scores available for human review
 - Poor quality OCR flagged for manual correction
+- **Must comply with [Standards.md](Standards.md)**: OCR service usage, common services integration, and logging requirements verified
 
 **Status:** Not started
 
@@ -253,6 +265,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Document type classification available through UI
 - Reclassification generates audit events
 - No document appears in multiple corpora simultaneously
+- **Must comply with [Standards.md](Standards.md)**: Common services usage, API standards, configuration patterns, and logging requirements verified
 
 **Status:** Not started
 
@@ -281,6 +294,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Retrieval returns relevant passages from specified corpus only
 - Search results include provenance links to source documents
 - Retrieval performance adequate for interactive use
+- **Must comply with [Standards.md](Standards.md)**: RAG service usage, common services integration, and logging requirements verified
 
 **Status:** Not started
 
@@ -311,6 +325,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Agent responses validated against expected schemas
 - All agent executions logged with full provenance
 - Agent failures handled gracefully without system impact
+- **Must comply with [Standards.md](Standards.md)**: LLM service usage, common services integration, versioning standards, and logging requirements verified
 
 **Status:** Not started
 
@@ -341,6 +356,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Claim Drafting Agent grounds all claims in Open Patent Corpus
 - Support Verification Agent catches unsupported claim elements
 - All agents produce structured, auditable outputs
+- **Must comply with [Standards.md](Standards.md)**: Agent implementation patterns, versioning standards, and logging requirements verified
 
 **Status:** Not started
 
@@ -368,6 +384,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Automated task assignment algorithms
 
 **Acceptance Criteria:** Per HITLTaskSpec.md acceptance criteria - all task management functionality operational with single reviewer model
+**Standards Compliance:** Must comply with [Standards.md](Standards.md) - API standards, common services usage, configuration patterns, and logging requirements verified
 
 **Status:** Not started
 
@@ -398,6 +415,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Events published for pipeline progress, agent execution, task completion
 - Logs searchable by correlation ID, user, document, or time range
 - System health visible through logs and basic metrics
+- **Must comply with [Standards.md](Standards.md)**: LoggingService interface usage, event taxonomy, audit requirements, and configuration standards verified
 
 **Status:** Not started
 
@@ -428,6 +446,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Document processing progress visible to users
 - Audit trails accessible for review and verification
 - System errors visible to administrators with actionable information
+- **Must comply with [Standards.md](Standards.md)**: API standards, UI implementation patterns, configuration management, and logging requirements verified
 
 **Status:** Not started
 
@@ -436,7 +455,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 ### P3.12 Phase 3 Integration and Verification
 **Maps to PRD:** Phase 3 completion requirements
 
-**Objective:** Verify end-to-end system functionality and phase discipline compliance.
+**Objective:** Verify end-to-end system functionality, standards compliance, and phase discipline compliance.
 
 **Scope:**
 - Run complete document processing workflow (upload → OCR → corpus assignment → agent analysis → HITL review)
@@ -445,6 +464,18 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Validate provenance tracking from source documents to final outputs
 - Check audit trail completeness and immutability
 - Verify no Phase 4 features leaked into implementation
+- **Standards Compliance Verification**: Validate all [Standards.md](Standards.md) requirements met
+- **Common Services Usage**: Verify all mandatory common services properly implemented
+- **API Standards**: Confirm response envelopes, error handling, routing patterns per standards
+- **Configuration Standards**: Validate Pydantic BaseSettings usage and environment variable patterns
+- **Logging Standards**: Verify LoggingService interface usage and event taxonomy compliance
+- **Governance Enforcement**: Test conflict-handling rule implementation and violation detection
+
+**Testing Expectations (Phase 3 Only)**:
+- **Standards Adherence Checks**: Automated validation of technical standards compliance
+- **Governance Enforcement Verification**: Test standards violation detection and human override processes
+- **Functional Integration**: End-to-end workflow verification without performance optimization
+- **EXPLICITLY OUT OF SCOPE**: Performance testing, scalability testing, migration testing (deferred to future phases)
 
 **Explicitly Not In Scope:**
 - Performance testing or load testing
@@ -458,6 +489,8 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Agent boundaries respected and violations prevented
 - Complete audit trail from source document to human decisions
 - No unauthorized features or capabilities present
+- **Standards.md Compliance Verified**: All mandatory common services, API standards, configuration patterns, and logging requirements confirmed
+- **Governance Rules Enforced**: Conflict-handling rule implementation validated, standards violation detection operational
 
 **Tag:** `phase-3-build-complete`
 
@@ -621,9 +654,11 @@ Use `.gitkeep` files as needed.
 ### P2.1 Establish Common Services Skeleton
 **Maps to PRD:** Phase 2 structural preparation
 
+**Technical Standards Authority**: All common services usage requirements defined in [Standards.md](./Standards.md)
+
 - Create `common/` module structure with empty classes
-- Define API routing invariants (slash, prefix, versioning)
-- Define canonical API response & error envelopes (schema only)
+- Define API routing invariants (slash, prefix, versioning) per [Standards.md](./Standards.md)
+- Define canonical API response & error envelopes (schema only) per [Standards.md](./Standards.md)
 - Define service interface contracts (no implementations):
   - **Request/Execution Context Service**: request_id, trace/correlation metadata, lifecycle-safe propagation
   - **Time/Clock Service**: Centralized UTC time source, mockable interface, no direct datetime.now() usage outside this service
@@ -644,6 +679,8 @@ Use `.gitkeep` files as needed.
 
 ## Phase 2 Invariants (Documentation Only)
 
+**Standards Authority**: Complete technical standards now defined in [Standards.md](./Standards.md)
+
 The following rules are documented during Phase 2 but not enforced until Phase 3:
 
 **A) Async/Sync Execution Boundary Rule**
@@ -652,13 +689,13 @@ The following rules are documented during Phase 2 but not enforced until Phase 3
 - Rule is documented only in Phase 2
 
 **B) API Routing Shape Invariant**
-- Single trailing-slash policy (choose one, document only)
+- Single trailing-slash policy (NO trailing slashes per [Standards.md](./Standards.md))
 - Versioned prefix invariant (/api/v1)
 - No implicit index routes
 
 **C) API Response & Error Envelope Invariant**
-- Canonical success response schema
-- Canonical error response schema
+- Canonical success response schema (APIResponse[T])
+- Canonical error response schema (APIError + ErrorCode)
 - Schema definition only (no enforcement yet)
 
 ---

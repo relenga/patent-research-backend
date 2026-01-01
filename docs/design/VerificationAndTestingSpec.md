@@ -2,6 +2,8 @@
 
 **Status**: APPROVED - Comprehensive Testing + Validation Architecture (Dec 30, 2025)  
 **Authority**: Technical implementation guidance for P3.12 Verification and Testing Implementation  
+**Standards Compliance**: [Standards.md](../Standards.md) - MANDATORY testing standards, governance enforcement verification, and compliance validation  
+**Authority Position**: Guidance only - BuildPlan.md defines acceptance criteria and testing scope
 **Cross-References**: [BuildPlan.md](../BuildPlan.md) (acceptance criteria), [FailureModesSpec.md](./FailureModesSpec.md) (failure scenarios), [PipelineStateMachine.md](../PipelineStateMachine.md) (state testing), [CorpusModel.md](../CorpusModel.md) (isolation testing)
 
 ## Authority Relationship
@@ -24,15 +26,17 @@ Defines technical implementation of comprehensive testing, verification, validat
 - **Component Tests**: Service-level testing with database and external dependencies
 - **Integration Tests**: Cross-service integration with real database interactions
 - **End-to-End Tests**: Complete user workflow testing with full system stack
-- **Performance Tests**: Load testing, stress testing, and performance benchmarking
-- **Security Tests**: Access control, authentication, and vulnerability testing
+- **Standards Compliance Tests**: Validate [Standards.md](../Standards.md) common services usage, API patterns, configuration standards
+- **Governance Enforcement Tests**: Verify conflict-handling rule implementation and standards violation detection
+- **Performance Tests**: Load testing, stress testing, and performance benchmarking (DEFERRED for Phase 3)
+- **Security Tests**: Access control, authentication, and vulnerability testing (DEFERRED for Phase 3)
 
 #### Test Infrastructure
-- **Test Database**: Isolated test database with schema matching production
+- **Test Database**: Isolated test database with fresh schema creation (migration tooling deferred per [Standards.md](../Standards.md))
 - **Test Data Management**: Controlled test data sets with reset and cleanup procedures
-- **Test Environment**: Docker-based test environment matching production configuration
-- **CI/CD Integration**: Automated test execution on code changes and deployments
-- **Test Reporting**: Comprehensive test reporting with coverage metrics and failure analysis
+- **Test Environment**: Local development environment (Docker deferred for Phase 3)
+- **Standards Validation**: Automated validation of [Standards.md](../Standards.md) compliance in test suite
+- **Test Reporting**: Comprehensive test reporting with coverage metrics and standards compliance status
 
 ### Unit Testing Framework
 
