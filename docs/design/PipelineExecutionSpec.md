@@ -98,6 +98,59 @@ Defines pipeline execution mechanics including transition triggers, failure mapp
 - ✅ Emergency controls allow manual override with proper authorization
 - ✅ No custom states or transitions outside PipelineStateMachine.md authority
 
+## Phase 3.2A Resource Management and State Coordination
+
+**Purpose**: Handle complex documents with 15-20+ diagrams without pipeline starvation or deadlocks
+
+### Complex Document Processing Rules
+
+**Document complexity classification:**
+- Simple: ≤5 images (standard processing)
+- Standard: 6-15 images (managed processing)
+- Complex: 16+ images (coordination required)
+
+**Complex document coordination:**
+- Maximum 3 complex documents in processing simultaneously
+- Complex documents get dedicated processing capacity allocation
+- Resource sharing with simple/standard documents managed via priority queues
+
+### Resource Allocation Framework
+
+**Processing capacity limits:**
+- OCR processing: Maximum 10 concurrent image extractions
+- Vision processing: Maximum 5 concurrent diagram interpretations (GPU limited)
+- HITL task generation: Maximum 20 pending tasks per reviewer
+- Database connections: Pool managed via Standards.md PostgreSQL requirements
+
+**Priority queue management:**
+- Priority 1: Critical diagrams blocking document completion
+- Priority 2: Standard processing maintaining throughput
+- Priority 3: Background optimization and cleanup tasks
+
+### Pipeline Starvation Prevention
+
+**Timeout-based completion:**
+- Complex documents: 24-hour maximum processing time
+- Automatic PARTIALLY_PROCESSED state transition at completion threshold
+- Manual override capability with mandatory audit trail
+
+**Resource deadlock prevention:**
+- No indefinite HITL task queuing (maximum 48-hour review timeout)
+- Automatic escalation for overdue human tasks
+- Emergency processing bypass with administrative approval
+
+### State Machine Coordination for Multiple Documents
+
+**Concurrent document processing:**
+- Independent state machines per document
+- Shared resource coordination via execution queues  
+- No cross-document dependencies or blocking
+
+**Completion criteria enforcement:**
+- Document READY state requires 90% image completion AND all critical images complete
+- PARTIALLY_PROCESSED state allows 70-89% completion with critical images done
+- Manual override logging includes completion_percentage and business_reason
+
 **BuildPlan.md P3.2 Compliance**:
 - Pipeline step runner framework implements trigger mechanisms defined here
 - Failure detection maps to state machine failure paths exactly

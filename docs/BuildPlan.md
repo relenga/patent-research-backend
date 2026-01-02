@@ -163,11 +163,17 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Progress tracking and state change event publishing with audit trail
 - Manual state override capabilities for administration (emergency controls)
 - State validation against PipelineStateMachine.md before all transitions
+- **Phase 3.2A Coordination**: Complex document processing (15-20+ diagrams) with resource management
+- **Document completion logic**: 90% threshold for READY state, PARTIALLY_PROCESSED at 70-90%
+- **Basic diagram classification**: 3-type system (critical/supporting/decorative) with automatic rules
+- **Similarity thresholds**: 3-level system (≥95% duplicate, 80-94% near-duplicate, <80% unique)
+- **Enhanced override logging**: Mandatory override_reason field with audit trail
 
 **Explicitly Not In Scope:**
-- Specific pipeline step implementations (covered in later tasks)
-- Performance optimization or parallel processing
-- Complex scheduling or priority queues
+- Complex timeout matrices by document class (simplified 24-hour timeout only)
+- REPROCESSING state implementation (deferred to later phases)
+- Advanced priority queues beyond basic 3-level system
+- Enterprise monitoring dashboards (deferred to operations phase)
 - Pipeline analytics or metrics beyond basic progress
 - Custom states not defined in PipelineStateMachine.md
 
@@ -181,6 +187,50 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - **Must comply with [Standards.md](Standards.md)**: Common services usage, API patterns, configuration standards, and logging requirements verified
 
 **Status:** Not started
+
+---
+
+### P3.2B Advanced Pipeline Coordination (PLACEHOLDER)
+**Maps to PRD:** Advanced pipeline coordination requirements (scope TBD)  
+**Proposal Reference**: [StateMachine.md](proposals/StateMachine.md) - Comprehensive coordination analysis  
+**Implementation Dependency**: P3.2A must be operational with 30-day production experience
+
+**Status:** 📋 PLACEHOLDER - Scope to be refined based on P3.2A operational learnings
+
+**Current Status**: Placeholder task pending P3.2A production deployment and experience
+
+**Candidate Advanced Features** (subject to operational validation):
+- Complex timeout matrices by document class (replacing simple 24-hour timeout)
+- REPROCESSING state for handling model updates and administrative overrides
+- Advanced priority queue systems with dynamic resource allocation optimization
+- Enterprise monitoring dashboards with pipeline analytics and performance metrics
+- Automatic quality scoring with batch processing optimizations
+- Resource allocation algorithms based on document complexity and processing history
+
+**Scope Finalization Requirements**:
+- P3.2A must be operational in production for minimum 30 days
+- Complex document processing performance data collection completed
+- Resource bottleneck analysis completed with actual usage patterns
+- Stakeholder review of P3.2A operational experience and identified gaps
+
+**Planning Methodology**:
+- Technical scope will be data-driven based on P3.2A operational metrics
+- Resource requirements assessment using actual deployment performance
+- Integration complexity evaluation with real-world document processing patterns
+- Cost-benefit analysis comparing advanced features against operational efficiency gains
+
+**Implementation Readiness Gate**:
+- P3.2A tagged complete and stable in production
+- Performance baselines established for complex document processing (15-20+ diagrams)
+- Resource utilization patterns analyzed and optimization opportunities identified
+- Human reviewer feedback collected on coordination pain points
+
+**Acceptance Criteria**: TBD - Will be defined based on operational data from P3.2A deployment
+
+**Explicitly Deferred Until Scope Finalization**:
+- Detailed task breakdown (awaiting operational requirements)
+- Resource allocation planning (pending performance analysis)
+- Implementation timeline (dependent on P3.2A stability)
 
 ---
 

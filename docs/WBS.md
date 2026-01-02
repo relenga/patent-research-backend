@@ -35,13 +35,51 @@
 - **Completion Date**: January 2, 2026 - All functional tests passing, Tester verification passed, Standards.md compliance confirmed
 
 ## 3.2 Pipeline State Machine Execution (P3.2)
-- 3.2.1 Build state transition executor (validates transitions, updates database, triggers next steps)
-- 3.2.2 Implement pipeline step runner framework
-- 3.2.3 Add pipeline failure detection and retry logic
-- 3.2.4 Create state change event publishing
-- 3.2.5 Build pipeline progress tracking and reporting
-- 3.2.6 Add manual state transition override (admin only)
-- **3.2.7 VERIFICATION**: Confirm common services usage, API standards compliance, LoggingService integration, and [Standards.md](Standards.md) compliance
+
+### 3.2A Pipeline Coordination Core Implementation (P3.2A) - IMMEDIATE SCOPE
+**Phase 3.2A Coordination Enhancements** - Approved for immediate implementation
+
+**Objective**: Implement core pipeline coordination to handle complex documents with 15-20+ diagrams without deadlocks or starvation
+
+**Tasks:**
+- 3.2A.1 Build state transition executor with Phase 3.2A coordination rules (validates transitions, updates database, triggers next steps)
+- 3.2A.2 Implement simplified document completion logic (90% threshold for READY, 70-89% for PARTIALLY_PROCESSED)
+- 3.2A.3 Add basic diagram classification system (critical/supporting/decorative with automatic rules)
+- 3.2A.4 Implement 3-level similarity thresholds (≥95% duplicate, 80-94% near-duplicate, <80% unique)
+- 3.2A.5 Add pipeline step runner framework with resource management (GPU limits, priority queues)
+- 3.2A.6 Create pipeline starvation prevention (24-hour timeout, automatic escalation)
+- 3.2A.7 Build enhanced override logging (mandatory override_reason field with audit trail)
+- 3.2A.8 Add state change event publishing with coordination metadata
+- 3.2A.9 Build pipeline progress tracking for complex documents
+- 3.2A.10 Add manual state transition override with enhanced audit (admin only)
+- **3.2A.11 VERIFICATION**: Confirm Phase 3.2A coordination rules prevent pipeline deadlocks, handle 15-20+ diagram documents, and maintain [Standards.md](Standards.md) compliance
+
+### 3.2B Advanced Pipeline Coordination (P3.2B) - PLACEHOLDER
+**Status**: Placeholder - scope to be refined based on P3.2A production experience  
+**Reference**: [StateMachine.md proposal](proposals/StateMachine.md) contains detailed analysis of advanced coordination features  
+**Dependency**: P3.2A must be operational with 30-day production experience before P3.2B scope finalization
+
+**Candidate Advanced Features (TBD):**
+- Complex timeout matrices by document class (not simple 24-hour timeout)
+- REPROCESSING state for model updates and administrative overrides
+- Advanced priority queue systems with dynamic resource allocation
+- Enterprise monitoring dashboards and pipeline analytics
+- Resource allocation optimization algorithms
+- Automatic quality scoring and batch processing optimizations
+
+**Scope Finalization Triggers:**
+- P3.2A operational in production for 30+ days
+- Complex document processing performance data collected
+- Resource bottleneck analysis completed
+- Stakeholder review of operational experience and requirements
+
+**Planning Approach:**
+- Technical scope will be refined based on P3.2A operational learnings
+- Resource requirements analysis after P3.2A deployment
+- Integration complexity assessment with actual usage patterns
+- Cost-benefit analysis of advanced coordination features
+
+**Acceptance Criteria**: TBD based on operational learnings from P3.2A deployment
 
 ## 3.3 Document Ingestion Implementation (P3.3)
 - 3.3.1 Build file upload handler (PDF, XML, HTML, images)

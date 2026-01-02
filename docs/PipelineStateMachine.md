@@ -95,10 +95,38 @@ Manual uploads and research-agent acquisitions enter the pipeline identically af
 | NORMALIZED | Format standardized |
 | TEXT_EXTRACTED | Text successfully extracted |
 | IMAGES_EXTRACTED | Images isolated |
-| PARTIALLY_PROCESSED | Some entities pending review |
-| READY | All required components complete |
+| PARTIALLY_PROCESSED | Some entities pending review (70-89% completion) |
+| READY | All required components complete (≥90% completion) |
 | BLOCKED | Awaiting HITL or external decision |
 | FAILED | Processing failed irrecoverably |
+
+### Phase 3.2A Document Completion Logic
+
+**Document completion percentage calculation:**
+Completion = (READY + DUPLICATE_LINKED + IGNORED) / Total Images
+
+**State transitions with explicit thresholds:**
+
+**READY state requires ALL conditions:**
+- TEXT_EXTRACTED = complete
+- Image completion ≥ 90% AND critical images = 100% complete
+- No BLOCKED images remaining (or explicit override)
+- Processing time < 24-hour timeout (simplified)
+
+**PARTIALLY_PROCESSED state triggers when:**
+- Image completion ≥ 70% AND < 90%
+- Critical images = 100% complete
+- Non-critical images may remain in processing
+
+**BLOCKED state triggers when:**
+- Any critical image in BLOCKED state
+- Image completion < 70% after timeout
+- Manual override required for completion
+
+**Manual Override Capability:**
+- Project managers can force READY state with mandatory override_reason field
+- Override audit includes: timestamp, user, reason, completion_percentage
+- Override does not bypass corpus isolation or safety checks
 
 ---
 
@@ -120,25 +148,76 @@ Manual uploads and research-agent acquisitions enter the pipeline identically af
 | CANONICALIZED | Approved diagram description exists |
 | READY | Eligible for downstream reasoning (corpus constraints apply) |
 
+### Phase 3.2A Diagram Classification System (3-Type)
+
+**diagram_type field values:**
+
+**critical** (title/method diagrams):
+- interpretation_required: TRUE
+- completion_weight: 2.0 (counts double toward completion)
+- hitl_priority: CRITICAL
+- Must complete for document READY state
+
+**supporting** (detail diagrams):
+- interpretation_required: TRUE  
+- completion_weight: 1.0
+- hitl_priority: STANDARD
+- Standard processing priority
+
+**decorative** (logos, borders):
+- interpretation_required: FALSE
+- completion_weight: 0.1
+- hitl_priority: LOW
+- May be auto-ignored
+
+**Automatic Classification Rules:**
+- Images with "Figure 1", "Fig 1" → supporting
+- Images containing "System", "Method", "Process" → critical
+- Images on page 1 or containing title text → critical  
+- Images with company logos or standard borders → decorative
+- Ambiguous classifications trigger HITL task for manual review
+
 ---
 
 ## Duplicate & Reuse Handling (Critical)
 
-### Duplicate Detection Rules
+### Phase 3.2A Similarity Thresholds (3-Level System)
 
-- Every image produces:
-  - Perceptual hash
-  - Structural embedding
+**Duplicate Detection Rules with explicit thresholds:**
+
+Every image produces:
+- Perceptual hash
+- Structural embedding  
 - Comparison against **Diagram Canonical Registry**
 
-### Possible Outcomes
+**Similarity-based outcomes:**
 
-| Outcome | Action |
-|-------|-------|
-| Identical | Link to existing canonical diagram |
-| Near-duplicate | HITL decision required |
-| Unique | New diagram interpretation required |
-| Non-semantic | Mark as IGNORED |
+**Duplicate (≥95% similarity):**
+- Action: Immediate DUPLICATE_LINKED state
+- Processing: Auto-link to canonical, skip OCR/vision processing
+- HITL: No human review required
+- Audit: Log canonical reference with confidence score
+
+**Near-duplicate (80-94% similarity):**
+- Action: BLOCKED state, create HITL task
+- Processing: Suspend until human decision
+- HITL: "Approve as duplicate" or "Process as unique"
+- Audit: Log similarity score and human rationale
+
+**Unique (<80% similarity):**
+- Action: Standard processing pipeline
+- Processing: Full OCR/vision/interpretation required
+- HITL: Standard interpretation review
+- Audit: Log as unique with processing results
+
+### Processing Outcomes
+
+| Similarity Level | Threshold | Action |
+|-----------------|-----------|--------|
+| Duplicate | ≥95% | Link to existing canonical diagram |
+| Near-duplicate | 80-94% | HITL decision required |
+| Unique | <80% | New diagram interpretation required |
+| Non-semantic | Any | Mark as IGNORED (decorative) |
 
 ---
 
