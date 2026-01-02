@@ -22,6 +22,8 @@ from typing import Dict, List, Optional, Set, Any, Union
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
+from app.common.time import TimeService
+from app.common.ids import IDService
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select, update
@@ -439,8 +441,9 @@ class PipelineStateExecutor:
         """Execute transition with audit trail creation."""
         
         # Create audit event per Standards.md compliance
+        id_service = IDService()
         audit_event = AuditEvent(
-            uuid=str(uuid.uuid4()),
+            uuid=id_service.generate_id(),
             event_type="state_transition",
             event_name=f"{context.entity_type}_state_change",
             event_description=f"State transition: {from_state} -> {to_state} via {trigger}",

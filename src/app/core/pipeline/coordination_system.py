@@ -25,6 +25,7 @@ from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.common.time import TimeService
 from app.core.logger import get_logger
 from app.core.config import get_settings
 
@@ -273,7 +274,7 @@ class PipelineCoordinationSystem:
                 'meets_secondary_threshold': completion_metrics.completion_percentage >= self.config.completion_threshold_secondary,
                 'recommended_state': recommended_state,
                 'coordination_decision': coordination_decision,
-                'timestamp': datetime.now(timezone.utc).isoformat()
+                'timestamp': TimeService().utcnow().isoformat()
             }
             
             # Publish completion change event
@@ -293,7 +294,7 @@ class PipelineCoordinationSystem:
             return {
                 'document_id': document_id,
                 'error': str(e),
-                'timestamp': datetime.now(timezone.utc).isoformat()
+                'timestamp': TimeService().utcnow().isoformat()
             }
     
     async def request_manual_override(self, request: OverrideRequest) -> Optional[str]:
@@ -327,8 +328,9 @@ class PipelineCoordinationSystem:
             Dictionary with current system status
         """
         try:
+            time_service = TimeService()
             status = {
-                'timestamp': datetime.now(timezone.utc).isoformat(),
+                'timestamp': time_service.utcnow().isoformat(),
                 'system_initialized': True,
                 'configuration': {
                     'max_gpu_slots': self.config.max_gpu_slots,
@@ -373,8 +375,9 @@ class PipelineCoordinationSystem:
             
         except Exception as e:
             logger.error(f"Failed to get system status: {e}")
+            time_service = TimeService()
             return {
-                'timestamp': datetime.now(timezone.utc).isoformat(),
+                'timestamp': time_service.utcnow().isoformat(),
                 'system_initialized': False,
                 'error': str(e)
             }
@@ -428,7 +431,7 @@ class PipelineCoordinationSystem:
                                 priority=EventPriority.HIGH,
                                 metadata={
                                     'starvation_duration': str(
-                                        datetime.now(timezone.utc) - request.requested_at
+                                        TimeService().utcnow() - request.requested_at
                                     ),
                                     'priority': request.priority.value
                                 }

@@ -24,6 +24,8 @@ from sqlalchemy.orm import relationship
 import uuid
 import json
 
+from app.common.time import TimeService
+from app.common.ids import IDService
 from app.core.logger import get_logger
 from app.core.config import get_settings
 from app.models.base import Base
@@ -77,7 +79,7 @@ class PipelineOverrideAudit(Base):
     __tablename__ = "pipeline_override_audits"
     
     id = Column(Integer, primary_key=True, index=True)
-    override_id = Column(UUID(as_uuid=True), default=uuid.uuid4, unique=True, index=True)
+    override_id = Column(UUID(as_uuid=True), default=IDService().generate_id, unique=True, index=True)
     
     # Administrator identification
     administrator_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
@@ -90,7 +92,7 @@ class PipelineOverrideAudit(Base):
     justification = Column(Text, nullable=False)  # Minimum length enforced in validation
     
     # Timing information
-    requested_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    requested_at = Column(DateTime(timezone=True), default=TimeService().utcnow, nullable=False)
     executed_at = Column(DateTime(timezone=True), index=True)
     completed_at = Column(DateTime(timezone=True))
     
@@ -225,7 +227,8 @@ class PipelineOverrideLogger:
             return
         
         # Update execution status
-        audit_record.executed_at = datetime.now(timezone.utc)
+        time_service = TimeService()
+        audit_record.executed_at = time_service.utcnow()
         if not success:
             audit_record.success = "failed"
             audit_record.error_message = error_message
@@ -269,7 +272,8 @@ class PipelineOverrideLogger:
             return
         
         # Update completion status
-        audit_record.completed_at = datetime.now(timezone.utc)
+        time_service = TimeService()
+        audit_record.completed_at = time_service.utcnow()
         audit_record.success = "success" if final_success else "failed"
         audit_record.rollback_performed = rollback_performed
         
@@ -345,7 +349,8 @@ class PipelineOverrideLogger:
         from sqlalchemy import select, func, and_
         from datetime import timedelta
         
-        cutoff_date = datetime.now(timezone.utc) - timedelta(days=days_back)
+        time_service = TimeService()
+        cutoff_date = time_service.utcnow() - timedelta(days=days_back)
         
         # Count overrides by action
         stmt = select(

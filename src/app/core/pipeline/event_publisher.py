@@ -27,6 +27,8 @@ import aiohttp
 from pydantic import BaseModel, HttpUrl
 from contextlib import asynccontextmanager
 
+from app.common.time import TimeService
+from app.common.ids import IDService
 from app.core.logger import get_logger
 from app.core.config import get_settings
 from app.models.base import Base
@@ -108,13 +110,13 @@ class PipelineEventLog(Base):
     __tablename__ = "pipeline_event_logs"
     
     id = Column(Integer, primary_key=True, index=True)
-    event_id = Column(UUID(as_uuid=True), default=uuid.uuid4, unique=True, index=True)
+    event_id = Column(UUID(as_uuid=True), default=IDService().generate_id, unique=True, index=True)
     
     # Event metadata
     event_type = Column(String(50), nullable=False, index=True)
     priority = Column(String(20), nullable=False, index=True)
     source = Column(String(100), nullable=False, index=True)
-    timestamp = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    timestamp = Column(DateTime(timezone=True), default=TimeService().utcnow, nullable=False)
     
     # Entity references
     document_id = Column(Integer, index=True)
@@ -434,10 +436,12 @@ class EventPayloadBuilder:
         metadata: Optional[Dict[str, Any]] = None
     ) -> EventPayload:
         """Build payload for state transition event."""
+        time_service = TimeService()
+        id_service = IDService()
         return EventPayload(
-            event_id=str(uuid.uuid4()),
+            event_id=id_service.generate_id(),
             event_type=EventType.STATE_TRANSITION,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=time_service.utcnow(),
             priority=priority,
             source=source,
             document_id=document_id,
@@ -458,10 +462,12 @@ class EventPayloadBuilder:
         metadata: Optional[Dict[str, Any]] = None
     ) -> EventPayload:
         """Build payload for processing completion event."""
+        time_service = TimeService()
+        id_service = IDService()
         return EventPayload(
-            event_id=str(uuid.uuid4()),
+            event_id=id_service.generate_id(),
             event_type=EventType.PROCESSING_COMPLETED,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=time_service.utcnow(),
             priority=priority,
             source=source,
             document_id=document_id,
@@ -480,10 +486,12 @@ class EventPayloadBuilder:
         metadata: Optional[Dict[str, Any]] = None
     ) -> EventPayload:
         """Build payload for error event."""
+        time_service = TimeService()
+        id_service = IDService()
         return EventPayload(
-            event_id=str(uuid.uuid4()),
+            event_id=id_service.generate_id(),
             event_type=EventType.ERROR_OCCURRED,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=time_service.utcnow(),
             priority=priority,
             source=source,
             document_id=document_id,
@@ -503,10 +511,12 @@ class EventPayloadBuilder:
         metadata: Optional[Dict[str, Any]] = None
     ) -> EventPayload:
         """Build payload for manual intervention event."""
+        time_service = TimeService()
+        id_service = IDService()
         return EventPayload(
-            event_id=str(uuid.uuid4()),
+            event_id=id_service.generate_id(),
             event_type=EventType.MANUAL_INTERVENTION,
-            timestamp=datetime.now(timezone.utc),
+            timestamp=time_service.utcnow(),
             priority=priority,
             source=source,
             document_id=document_id,

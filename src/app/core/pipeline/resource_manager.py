@@ -26,6 +26,8 @@ from enum import Enum
 from collections import deque
 import uuid
 
+from app.common.time import TimeService
+from app.common.ids import IDService
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
@@ -426,7 +428,8 @@ class ResourceManager:
         metadata: Optional[Dict[str, Any]]
     ) -> str:
         """Allocate resource immediately."""
-        allocation_id = str(uuid.uuid4())
+        id_service = IDService()
+        allocation_id = id_service.generate_id()
         now = datetime.utcnow()
         
         estimated_duration = self.PROCESSING_ESTIMATES.get(processing_type, 5.0)
@@ -474,7 +477,8 @@ class ResourceManager:
                 {"queue_depth": total_queue_depth, "max_depth": self.MAX_QUEUE_DEPTH}
             )
         
-        request_id = str(uuid.uuid4())
+        id_service = IDService()
+        request_id = id_service.generate_id()
         now = datetime.utcnow()
         
         estimated_duration = self.PROCESSING_ESTIMATES.get(processing_type, 5.0)
