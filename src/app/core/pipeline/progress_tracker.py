@@ -25,14 +25,14 @@ import uuid
 import statistics
 from collections import defaultdict, deque
 
-from app.common.time import TimeService
-from app.common.ids import IDService
+from common.concrete_time_service import time_service
+from common.concrete_id_service import id_service
 from app.core.logger import get_logger
 from app.core.config import get_settings
-from app.models.base import Base
+from app.core.db.database import Base
 from .state_machine import PipelineDocumentState, PipelineImageState
 from .completion_calculator import DocumentCompletionCalculator, DocumentCompletionMetrics
-from .resource_manager import ResourceType, ResourceManager
+from .resource_manager import ProcessingType, ResourceManager
 
 
 logger = get_logger(__name__)
@@ -153,10 +153,10 @@ class PipelineProgressSnapshot(Base):
     __tablename__ = "pipeline_progress_snapshots"
     
     id = Column(Integer, primary_key=True, index=True)
-    snapshot_id = Column(UUID(as_uuid=True), default=IDService().generate_id, unique=True, index=True)
+    snapshot_id = Column(UUID(as_uuid=True), default=lambda: id_service.generate_id(), unique=True, index=True)
     
     # Timing information
-    timestamp = Column(DateTime(timezone=True), default=TimeService().utcnow, nullable=False, index=True)
+    timestamp = Column(DateTime(timezone=True), default=lambda: time_service.utc_now(), nullable=False, index=True)
     period = Column(String(20), nullable=False, index=True)  # TrackingPeriod
     
     # Progress metrics
@@ -239,9 +239,8 @@ class PipelineProgressTracker:
         projected_completion = await self._project_completion_time()
         
         # Create snapshot record
-        time_service = TimeService()
         snapshot = PipelineProgressSnapshot(
-            timestamp=time_service.utcnow(),
+            timestamp=time_service.utc_now(),
             period=period.value,
             total_documents=document_progress['total'],
             completed_documents=document_progress['completed'],
@@ -283,9 +282,8 @@ class PipelineProgressTracker:
             status = await self._resource_manager.get_resource_status()
             
             # Create utilization snapshot
-            time_service = TimeService()
             resource_util = ResourceUtilization(
-                timestamp=time_service.utcnow(),
+                timestamp=time_service.utc_now(),
                 gpu_slots_used=status.get('gpu_slots_used', 0),
                 gpu_slots_total=status.get('gpu_slots_total', 0),
                 ocr_slots_used=status.get('ocr_slots_used', 0), 
@@ -398,8 +396,7 @@ class PipelineProgressTracker:
         """Calculate processing statistics for the given period."""
         try:
             # Determine time window
-            time_service = TimeService()
-            now = time_service.utcnow()
+            now = time_service.utc_now()
             if period == TrackingPeriod.HOURLY:
                 start_time = now - timedelta(hours=1)
             elif period == TrackingPeriod.DAILY:
@@ -510,13 +507,11 @@ class PipelineProgressTracker:
             remaining_docs = doc_progress['total'] - doc_progress['completed']
             
             if remaining_docs <= 0:
-                time_service = TimeService()
-                return time_service.utcnow()  # Already complete
+                return time_service.utc_now()  # Already complete
             
             # Project completion time
             hours_remaining = remaining_docs / avg_rate
-            time_service = TimeService()
-            projected_time = time_service.utcnow() + timedelta(hours=hours_remaining)
+            projected_time = time_service.utc_now() + timedelta(hours=hours_remaining)
             
             return projected_time
             
@@ -530,8 +525,7 @@ class PipelineProgressTracker:
         limit: int = 100
     ) -> List[PipelineProgressSnapshot]:
         """Get recent progress snapshots."""
-        time_service = TimeService()
-        cutoff_time = time_service.utcnow() - timedelta(hours=hours)
+        cutoff_time = time_service.utc_now() - timedelta(hours=hours)
         
         stmt = select(PipelineProgressSnapshot).where(
             PipelineProgressSnapshot.timestamp >= cutoff_time
@@ -546,8 +540,7 @@ class PipelineProgressTracker:
         days: int = 7
     ) -> List[Tuple[datetime, float]]:
         """Get performance trend data for charting."""
-        time_service = TimeService()
-        cutoff_time = time_service.utcnow() - timedelta(days=days)
+        cutoff_time = time_service.utc_now() - timedelta(days=days)
         
         stmt = select(PipelineProgressSnapshot).where(
             PipelineProgressSnapshot.timestamp >= cutoff_time
@@ -599,15 +592,13 @@ class PipelineProgressTracker:
     
     def track_operation_start(self, operation_id: str):
         """Track the start of a processing operation."""
-        time_service = TimeService()
-        self._current_operations[operation_id] = time_service.utcnow()
+        self._current_operations[operation_id] = time_service.utc_now()
     
     def track_operation_end(self, operation_id: str, operation_type: str = "generic"):
         """Track the end of a processing operation."""
         if operation_id in self._current_operations:
             start_time = self._current_operations.pop(operation_id)
-            time_service = TimeService()
-            duration = (time_service.utcnow() - start_time).total_seconds()
+            duration = (time_service.utc_now() - start_time).total_seconds()
             self._processing_times[operation_type].append(duration)
 
 

@@ -63,8 +63,8 @@ from .coordination import (
 
 from .resource_manager import (
     ResourceManager,
-    ResourceType,
-    ProcessingPriority
+    ProcessingType,
+    Priority
 )
 
 from .manual_overrides import (
@@ -97,8 +97,8 @@ __all__ = [
     "StateTransition",
     "DiagramType",
     "DocumentCompletionMetrics",
-    "ResourceType",
-    "ProcessingPriority",
+    "ProcessingType",
+    "Priority",
     "OverrideRequest",
     "EmergencyLevel",
     "OverrideScope"

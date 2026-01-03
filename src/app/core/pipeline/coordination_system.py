@@ -25,7 +25,7 @@ from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.common.time import TimeService
+from common.concrete_time_service import time_service
 from app.core.logger import get_logger
 from app.core.config import get_settings
 
@@ -33,7 +33,7 @@ from app.core.config import get_settings
 from .state_machine import PipelineStateExecutor, StateTransition
 from .completion_calculator import DocumentCompletionCalculator
 from .coordination import PipelineCoordinator
-from .resource_manager import ResourceManager, ResourceType, ProcessingPriority
+from .resource_manager import ResourceManager, ProcessingType, Priority
 from .override_logging import PipelineOverrideLogger
 from .event_publisher import EventPublisher, EventPayloadBuilder, EventPriority
 from .progress_tracker import PipelineProgressTracker, TrackingPeriod
@@ -152,7 +152,7 @@ class PipelineCoordinationSystem:
     async def process_document(
         self,
         document_id: int,
-        priority: ProcessingPriority = ProcessingPriority.NORMAL
+        priority: Priority = Priority.STANDARD
     ) -> bool:
         """
         Process a document through the coordination pipeline.
@@ -178,7 +178,7 @@ class PipelineCoordinationSystem:
             
             # 2. Allocate resources
             resource_allocation = await self.resource_manager.allocate_resource(
-                resource_type=ResourceType.GPU,
+                resource_type=ProcessingType.GPU_INTERPRETATION,
                 document_id=document_id,
                 priority=priority,
                 estimated_duration=1800  # 30 minutes default
@@ -207,7 +207,7 @@ class PipelineCoordinationSystem:
             if not success:
                 # Release resources if state transition failed
                 await self.resource_manager.release_resource(
-                    ResourceType.GPU, 
+                    ProcessingType.GPU_INTERPRETATION, 
                     document_id
                 )
                 logger.error(f"State transition failed for document {document_id}")
@@ -220,7 +220,7 @@ class PipelineCoordinationSystem:
                     priority=EventPriority.NORMAL,
                     metadata={
                         'coordination_enabled': True,
-                        'resource_type': ResourceType.GPU.value,
+                        'resource_type': ProcessingType.GPU_INTERPRETATION.value,
                         'priority': priority.value
                     }
                 )
@@ -274,7 +274,7 @@ class PipelineCoordinationSystem:
                 'meets_secondary_threshold': completion_metrics.completion_percentage >= self.config.completion_threshold_secondary,
                 'recommended_state': recommended_state,
                 'coordination_decision': coordination_decision,
-                'timestamp': TimeService().utcnow().isoformat()
+                'timestamp': time_service.utc_now().isoformat()
             }
             
             # Publish completion change event
@@ -294,7 +294,7 @@ class PipelineCoordinationSystem:
             return {
                 'document_id': document_id,
                 'error': str(e),
-                'timestamp': TimeService().utcnow().isoformat()
+                'timestamp': time_service.utc_now().isoformat()
             }
     
     async def request_manual_override(self, request: OverrideRequest) -> Optional[str]:
@@ -328,9 +328,8 @@ class PipelineCoordinationSystem:
             Dictionary with current system status
         """
         try:
-            time_service = TimeService()
             status = {
-                'timestamp': time_service.utcnow().isoformat(),
+                'timestamp': time_service.utc_now().isoformat(),
                 'system_initialized': True,
                 'configuration': {
                     'max_gpu_slots': self.config.max_gpu_slots,
@@ -375,9 +374,8 @@ class PipelineCoordinationSystem:
             
         except Exception as e:
             logger.error(f"Failed to get system status: {e}")
-            time_service = TimeService()
             return {
-                'timestamp': time_service.utcnow().isoformat(),
+                'timestamp': time_service.utc_now().isoformat(),
                 'system_initialized': False,
                 'error': str(e)
             }
@@ -431,7 +429,7 @@ class PipelineCoordinationSystem:
                                 priority=EventPriority.HIGH,
                                 metadata={
                                     'starvation_duration': str(
-                                        TimeService().utcnow() - request.requested_at
+                                        time_service.utc_now() - request.requested_at
                                     ),
                                     'priority': request.priority.value
                                 }

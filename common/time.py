@@ -3,11 +3,12 @@ Time/Clock Service interface.
 
 Centralized UTC time source with mockable interface.
 Prevents direct datetime.now() usage outside this service.
-Phase 2: Interface contract only - no implementation.
+Phase 3: Provides working concrete implementation as canonical service.
 """
 
 from abc import ABC, abstractmethod
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+import time
 from typing import Optional, Union
 
 
@@ -200,3 +201,76 @@ class TimeZoneService(ABC):
             True if valid, False otherwise
         """
         pass
+
+
+# Concrete implementation embedded to avoid circular imports
+class ConcreteTimeService(TimeService):
+    """Production implementation of TimeService interface."""
+    
+    def __init__(self):
+        """Initialize concrete time service."""
+        self._fixed_time: Optional[datetime] = None
+    
+    def utc_now(self) -> datetime:
+        """Get current UTC datetime."""
+        if self._fixed_time:
+            return self._fixed_time
+        return datetime.now(timezone.utc)
+    
+    def utc_timestamp(self) -> float:
+        """Get current UTC timestamp."""
+        return self.utc_now().timestamp()
+    
+    def iso_utc_now(self) -> str:
+        """Get current UTC time as ISO string."""
+        return self.utc_now().isoformat()
+    
+    def parse_iso_datetime(self, iso_string: str) -> datetime:
+        """Parse ISO datetime string to datetime object."""
+        try:
+            # Handle various ISO formats
+            if iso_string.endswith('Z'):
+                iso_string = iso_string[:-1] + '+00:00'
+            
+            dt = datetime.fromisoformat(iso_string)
+            
+            # Ensure UTC timezone
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            elif dt.tzinfo != timezone.utc:
+                dt = dt.astimezone(timezone.utc)
+                
+            return dt
+        except ValueError as e:
+            raise ValueError(f"Cannot parse ISO datetime '{iso_string}': {e}")
+    
+    def to_iso_string(self, dt: datetime) -> str:
+        """Convert datetime to ISO string."""
+        # Ensure UTC timezone for consistency
+        if dt.tzinfo != timezone.utc:
+            dt = dt.astimezone(timezone.utc)
+        return dt.isoformat()
+    
+    def add_seconds(self, dt: datetime, seconds: Union[int, float]) -> datetime:
+        """Add seconds to datetime."""
+        return dt + timedelta(seconds=seconds)
+    
+    def is_expired(self, dt: datetime, ttl_seconds: Union[int, float]) -> bool:
+        """Check if datetime is expired given TTL."""
+        expiry_time = self.add_seconds(dt, ttl_seconds)
+        return self.utc_now() > expiry_time
+    
+    def sleep(self, seconds: Union[int, float]) -> None:
+        """Sleep for specified seconds."""
+        time.sleep(seconds)
+    
+    def set_fixed_time(self, fixed_time: Optional[datetime]) -> None:
+        """Set fixed time for testing."""
+        self._fixed_time = fixed_time
+
+
+# Create canonical service instance
+time_service = ConcreteTimeService()
+
+# Make the working instance available as the canonical TimeService
+__all__ = ['TimeService', 'TimeZoneService', 'time_service']

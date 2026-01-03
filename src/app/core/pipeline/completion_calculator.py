@@ -108,7 +108,7 @@ class DocumentCompletionCalculator:
     # States that block document completion  
     BLOCKING_STATES = {
         PipelineImageState.NEEDS_HITL,
-        PipelineImageState.BLOCKED
+        PipelineImageState.NEEDS_INTERPRETATION
     }
 
     def __init__(self):
