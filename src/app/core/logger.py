@@ -18,3 +18,16 @@ file_handler.setLevel(LOGGING_LEVEL)
 file_handler.setFormatter(logging.Formatter(LOGGING_FORMAT))
 
 logging.getLogger("").addHandler(file_handler)
+
+
+def get_logger(name: str = None) -> logging.Logger:
+    """
+    Get a logger instance for the specified module.
+    
+    Args:
+        name: Logger name, typically __name__ from calling module
+        
+    Returns:
+        Configured logger instance
+    """
+    return logging.getLogger(name)
