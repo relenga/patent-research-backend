@@ -77,10 +77,13 @@
   - **Dependency**: Architect risk assessment complete
   - **Success Criteria**: Authority approval with technical integration validation
 
-- **3.2B.2 Service Integration Pattern Validation** (1-2 days)
-  - Embedded service pattern extensions tested for circular import prevention
-  - Technical validation of MonitoringService, AnalyticsService, OptimizationService integration
-  - **Success Criteria**: Service patterns validated against [Standards.md](Standards.md) compliance
+- **3.2B.2 Document Lifecycle + Infrastructure Pattern Documentation** (5 days)
+  - User interface for document/image CRUD operations using existing infrastructure
+  - Soft delete reason codes using existing SoftDeleteMixin, document management UI with version comparison
+  - Granular image editing via individual REPROCESSING, lightweight embedded service pattern documentation
+  - **Success Criteria**: Complete document lifecycle control without full reprocessing, service pattern template for future phases
+  - **Dependencies**: P3.2B.1 REPROCESSING Authority Resolution complete
+  - **Implementation Focus**: Document backend (Day 1), management UI (Day 2), granular editing (Day 3), version comparison (Day 4), integration testing (Day 5)
 
 #### Phase 3.2B-Alpha: Complex Timeout and State Management (6-8 days)
 *Dependencies: Technical validation complete, authority resolution approved*
@@ -135,6 +138,7 @@
 *Dependencies: 3.2B-Gamma analytics operational*
 
 - **3.2B-Delta.1 Advanced Resource Algorithms** (3-4 days)
+
   - Intelligent resource allocation based on document complexity and processing history
   - Simplified algorithms optimized for powerful hardware and small document sets
   - **Success Criteria**: Resource allocation optimization improves processing efficiency without system complexity
