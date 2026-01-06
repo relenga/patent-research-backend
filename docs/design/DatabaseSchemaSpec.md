@@ -19,16 +19,20 @@ Defines complete relational database schema for patent intelligence system suppo
   - [ ] Document type classification (patent, prior_art, office_action, etc.)
   - [ ] Corpus assignment (single corpus per document)
   - [ ] Current state tracking (PipelineStateMachine states)
+  - [ ] Soft delete support (is_deleted, deleted_at, deletion_reason) - P3.2B.2
 
 - **DocumentVersion**: Immutable document versions
   - [ ] Version tracking with parent relationships
   - [ ] Content snapshots for auditability
   - [ ] Transformation tracking
+  - [ ] REPROCESSING version preservation (archived versions) - P3.2B.2
 
 - **Artifact**: Document-derived content
   - [ ] Text extractions, image references, diagram representations
   - [ ] Artifact type enumeration
   - [ ] Parent document relationships
+  - [ ] Soft delete support (is_deleted, deleted_at, deletion_reason) - P3.2B.2
+  - [ ] Individual REPROCESSING state tracking - P3.2B.2
 
 - **DiagramCanonical**: Structured diagram representations
   - [ ] Canonical diagram format definition

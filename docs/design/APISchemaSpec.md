@@ -19,12 +19,20 @@ Defines domain-specific API endpoints and request/response schemas for documents
 - [ ] **PUT /api/v1/documents/{id}** - Document metadata updates
 - [ ] **GET /api/v1/documents/{id}/versions** - Document version history
 - [ ] **POST /api/v1/documents/{id}/transition** - Pipeline state transitions
+- [ ] **DELETE /api/v1/documents/{id}** - Soft delete with reason (P3.2B.2)
+- [ ] **POST /api/v1/documents/{id}/restore** - Restore soft-deleted document (P3.2B.2)
+- [ ] **POST /api/v1/documents/{id}/reprocess** - Trigger REPROCESSING state (P3.2B.2)
 
 #### Artifact & Content APIs  
 - [ ] **GET /api/v1/documents/{id}/artifacts** - Document artifact listing
 - [ ] **POST /api/v1/artifacts** - Artifact creation (text, image, diagram)
 - [ ] **GET /api/v1/artifacts/{id}** - Artifact retrieval with content
 - [ ] **PUT /api/v1/artifacts/{id}** - Artifact updates and versioning
+- [ ] **DELETE /api/v1/artifacts/{id}** - Soft delete artifact with reason (P3.2B.2)
+- [ ] **POST /api/v1/artifacts/{id}/restore** - Restore soft-deleted artifact (P3.2B.2)
+- [ ] **POST /api/v1/artifacts/{id}/reprocess** - Individual artifact REPROCESSING (P3.2B.2)
+- [ ] **PUT /api/v1/artifacts/{id}/description** - Edit image description (P3.2B.2)
+- [ ] **POST /api/v1/artifacts/{id}/ignore** - Mark image as ignored (P3.2B.2)
 
 #### Diagram Management APIs
 - [ ] **POST /api/v1/diagrams/canonical** - Canonical diagram creation
