@@ -99,6 +99,90 @@ Defines complete relational database schema for patent intelligence system suppo
 
 ### Data Constraints
 
+#### **Standard Audit Fields (MANDATORY for All Tables)**
+**Per [Standards.md](../Standards.md) naming conventions and audit requirements:**
+
+- **`created_timestamp`**: TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  - Datetime when record was created
+  - Uses `_timestamp` suffix per Standards.md naming rules
+  - UTC timezone with microsecond precision
+
+- **`updated_timestamp`**: TIMESTAMP NULL
+  - Datetime when record was last modified  
+  - Updated automatically via database trigger
+  - NULL for records that have never been modified
+
+- **`created_by`**: VARCHAR(255) NOT NULL
+  - User/system identifier who created the record
+  - Values: user UUID, 'system_process', 'pipeline_automation', agent identifiers
+  - Required for all record creation audit trails
+
+- **`updated_by`**: VARCHAR(255) NULL
+  - User/system identifier who last modified the record
+  - Updated automatically with modification triggers
+  - NULL for records that have never been modified
+
+#### **Deletion Audit Fields (Where Soft Delete Required)**
+**For tables supporting soft deletion (documents, artifacts, images, etc.):**
+
+- **`marked_deleted`**: BOOLEAN DEFAULT FALSE
+  - Soft delete flag for retention without physical removal
+  - Enables recovery workflows and audit trail preservation
+
+- **`deleted_timestamp`**: TIMESTAMP NULL
+  - Datetime when record was marked for deletion
+  - NULL for active records
+
+- **`deleted_by`**: VARCHAR(255) NULL
+  - User/system identifier who deleted the record
+  - Required for deletion audit and accountability
+
+- **`deletion_reason`**: VARCHAR(255) NULL
+  - Categorized reason for deletion from predefined enum
+  - Values: 'user_request', 'policy_violation', 'data_cleanup', etc.
+
+#### **Document-Specific Upload Tracking**
+**For document ingestion audit trails:**
+
+- **`uploaded_by`**: ENUM('user', 'research_agent', 'system') NOT NULL
+  - Source of document upload for processing accountability
+
+- **`upload_source_info`**: JSONB NULL
+  - Additional upload context and metadata
+  - Structure varies by upload source type
+
+#### **Processing-Specific Actor Identification**
+**Standardized `created_by` values for automated processes:**
+- `'ocr_pipeline_tesseract'`: Tesseract OCR processing
+- `'vision_pipeline_pytorch'`: PyTorch vision analysis
+- `'multimodal_llm_synthesis'`: LLM description generation
+- `'vector_cleanup_system'`: Automated vector cleanup
+- `'reprocessing_pipeline'`: Document reprocessing system
+- `'research_agent_[id]'`: Agent-initiated actions
+- User UUID: Manual uploads and human actions
+
+#### **Multimodal Processing Field Requirements**
+**For enhanced image processing and vectorization support:**
+
+**OCR Result Fields (image_ocr_results table):**
+- **`language`**: VARCHAR(10) - OCR language configuration (e.g., 'eng', 'eng+fra')
+- **`engine_version`**: VARCHAR(50) - Tesseract version for processing traceability  
+- **`preprocessing_applied`**: JSONB - Array of preprocessing steps applied
+
+**Multimodal Description Fields (images table):**
+- **`context_correlation_score`**: FLOAT - Correlation between OCR and vision results (0.0-1.0)
+- **`sources_used`**: JSONB - Array indicating processing sources ['ocr_tesseract', 'vision_pytorch', 'document_context']
+- **`reference_numerals_correlated`**: JSONB - Array of patent figure reference numbers identified
+- **`figure_type`**: VARCHAR(50) - Classification (system_architecture, flowchart, circuit_diagram, etc.)
+- **`technical_complexity`**: VARCHAR(20) - Assessment level (low, medium, high)  
+- **`llm_model_used`**: VARCHAR(100) - LLM model identifier for description generation
+
+#### **Database Implementation Requirements**
+- **Triggers**: Automatic `updated_timestamp` and `updated_by` updates
+- **Constraints**: `created_timestamp` and `created_by` NOT NULL validation
+- **Indexes**: Performance indexes on audit fields for compliance queries
+- **Immutability**: Audit fields never modified after creation except via trigger
+
 - [ ] Check constraints for business rules
 - [ ] Corpus isolation enforcement constraints
 - [ ] State transition validation constraints

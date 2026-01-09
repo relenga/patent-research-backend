@@ -299,6 +299,12 @@ If an agent:
 - Agents MAY NOT restructure, move, or delete directories without Project Manager authorization.
 - Large structural changes require documentation updates.
 
+### Archive-Ignore Folder Protection Rule
+- **FORBIDDEN**: Any modification, creation, or deletion of files in `docs/archive-ignore/` folder without explicit user permission
+- **Purpose**: This folder is reserved for user's personal document storage and reference materials
+- **Enforcement**: All agents must check file paths and reject operations targeting `archive-ignore/` folder
+- **Exception**: Only with explicit user instruction: "please modify files in archive-ignore folder"
+
 ---
 
 ## Scope Conflict & Creep Handling

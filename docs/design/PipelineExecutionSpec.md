@@ -182,6 +182,22 @@ Defines pipeline execution mechanics including transition triggers, failure mapp
 - [ ] **PIPELINE_STEP_COMPLETE**: Step completion with outputs
 - [ ] **FAILURE_OCCURRENCE**: Failure details and recovery actions
 
+#### **Multimodal Processing Audit Events (MEDIUM Priority Enhancement)**
+**Enhanced audit coverage for OCR and vision processing per CorpusRequirements.md:**
+
+- [ ] **OCR_CONFIDENCE_THRESHOLD**: Automatic audit when OCR confidence < 0.7
+  - Triggers HITL escalation with complete processing context
+  - Captures confidence scores, alternative results, processing duration
+- [ ] **MULTIMODAL_SYNTHESIS_FAILURE**: Vision + OCR + Context correlation failures
+  - Documents technical failures in multimodal description generation
+  - Enables systematic improvement of processing algorithms
+- [ ] **HUMAN_CORRECTION_AUDIT**: Mandatory for OCR/description overrides
+  - Requires rationale field for all human corrections
+  - Links original automated results to human-validated outcomes
+- [ ] **VISION_PROCESSING_ERROR**: PyTorch model failures and low-confidence analysis
+  - Spatial relationship detection issues and layout classification problems
+  - Impact assessment for multimodal pipeline degradation
+
 #### Provenance Tracking
 - [ ] **Activity Lineage**: Step-by-step processing history
 - [ ] **Entity Evolution**: Document transformation tracking

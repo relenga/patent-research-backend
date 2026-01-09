@@ -45,6 +45,14 @@ All components MUST use these standardized services. Direct usage of alternative
 - **Backward Compatibility**: NOT GUARANTEED - Phase 3 assumes clean slate deployment
 - **Schema Changes**: Manual schema updates only, no automated migration workflows
 
+**Database Documentation Authority Model**:
+- **DatabaseSchemaSpec.md**: IMPLEMENTATION AUTHORITY - definitive table definitions, constraints, indexes, business rules
+- **ER Diagrams**: VISUAL AUTHORITY - enhanced visual representation with field lengths, basic constraints, relationships
+- **DDL Scripts**: DEPLOYED REALITY - actual implementation deployed to database
+- **Authority Hierarchy**: DatabaseSchemaSpec.md → ER Diagrams → DDL Scripts
+- **Conflict Resolution**: All conflicts resolved by referring to DatabaseSchemaSpec.md
+- **ER Diagram Enhancement**: Include field lengths (varchar(255)), basic constraints (NOT NULL, UNIQUE), relationships
+
 ### LoggingService (Structured Logging + Audit)
 **Name**: Centralized Logging Service  
 **Purpose**: Structured logging with correlation IDs, audit trails, and compliance tracking  
@@ -289,8 +297,8 @@ All list endpoints MUST support:
 
 ### Database Naming Conventions (MANDATORY)
 - **Tables**: snake_case naming (e.g., `document_artifacts`, `corpus_permissions`)
-- **Columns**: snake_case naming (e.g., `created_at`, `document_hash`)
-- **Indexes**: Descriptive names with table prefix (e.g., `idx_documents_created_at`)
+- **Columns**: snake_case naming (e.g., `created_timestamp`, `document_hash`)
+- **Indexes**: Descriptive names with table prefix (e.g., `idx_documents_created_timestamp`)
 - **Foreign Keys**: Consistent naming pattern (e.g., `document_id`, `corpus_id`)
 - **Primary Keys**: Use UUIDs via UUIDMixin, avoid integer auto-increment
 
@@ -309,7 +317,7 @@ All list endpoints MUST support:
 
 ### Variable Naming Domain-Specific Rules
 - **IDs**: Suffix with `_id` (e.g., `document_id`, `request_id`)
-- **Timestamps**: Suffix with `_at` (e.g., `created_at`, `processed_at`)
+- **Timestamps**: Suffix with `_timestamp` (e.g., `created_timestamp`, `processed_timestamp`)
 - **Flags**: Boolean variables prefixed with `is_` or `has_` (e.g., `is_processed`, `has_errors`)
 - **Counts**: Prefix with `num_` or `count_` (e.g., `num_documents`, `count_failures`)
 

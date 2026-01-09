@@ -88,6 +88,28 @@ Defines human-in-the-loop task lifecycle, assignment model, evidence bundle stru
 - [ ] **Primary Documents**: Source documents for review
 - [ ] **Agent Outputs**: Agent-generated analysis or claims
 - [ ] **Context Information**: Corpus boundaries, agent authorities
+
+#### **Multimodal Processing Evidence Bundles (MEDIUM Priority Enhancement)**
+**Enhanced evidence bundles for OCR and vision processing HITL escalation:**
+
+**OCR Confidence Escalation Bundle:**
+- [ ] **Original Image**: Full resolution image with processing metadata
+- [ ] **OCR Results**: All attempted extractions with confidence scores
+- [ ] **Alternative Results**: Multiple OCR engine outputs when available
+- [ ] **Document Context**: Surrounding text and figure references
+- [ ] **Processing History**: Previous OCR attempts and human corrections
+
+**Vision Analysis Review Bundle:**
+- [ ] **Spatial Analysis**: Detected objects and spatial relationships
+- [ ] **Layout Classification**: Automated diagram type classification
+- [ ] **Confidence Metrics**: Vision model confidence scores and uncertainty areas
+- [ ] **Multimodal Context**: OCR + Vision correlation attempts
+
+**Human Correction Integration:**
+- [ ] **Correction Interface**: Side-by-side original/corrected views
+- [ ] **Rationale Requirements**: Mandatory explanation for all corrections
+- [ ] **Quality Feedback**: Mechanism to improve automated processing
+- [ ] **Validation Workflow**: Confirm corrections before pipeline advancement
 - [ ] **Validation Data**: Supporting evidence and references
 - [ ] **Review Criteria**: Specific acceptance requirements
 

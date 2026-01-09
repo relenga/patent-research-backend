@@ -227,7 +227,40 @@ Defines technical implementation of comprehensive logging, event capture, audit 
 - **No runtime hardcoding of tunable values** - all logging behavior controlled through configuration
 
 ### Database Audit Schema
-- Audit events table with indexed timestamp, actor, and event type columns
+
+#### **Standardized Audit Field Integration**
+**All database tables MUST implement consistent audit fields per [DatabaseSchemaSpec.md](DatabaseSchemaSpec.md):**
+
+**Standard Fields**:
+- `created_timestamp`: Record creation datetime (NOT NULL)
+- `updated_timestamp`: Last modification datetime (NULL allowed)
+- `created_by`: Creator identification (NOT NULL)
+- `updated_by`: Last modifier identification (NULL allowed)
+
+**Deletion Fields** (where applicable):
+- `marked_deleted`: Soft delete flag
+- `deleted_timestamp`: Deletion datetime
+- `deleted_by`: Deletion actor identification
+- `deletion_reason`: Categorized deletion rationale
+
+#### **Audit Events Table Structure**
+- **Primary Table**: `audit_events` with comprehensive event logging
+- **Event Identification**: `event_type`, `event_name`, `event_description`
+- **Actor Tracking**: `actor_type`, `actor_id`, `actor_name`, `session_id`
+- **Resource Context**: `resource_type`, `resource_id`, `resource_name`
+- **Action Details**: `action_taken`, `action_rationale`
+- **State Capture**: `before_state`, `after_state` (JSONB for modifications)
+- **Request Correlation**: `request_id`, `correlation_id`, `trace_id`
+- **Timing**: `event_timestamp` with timezone and microsecond precision
+- **Compliance**: `development_phase`, `ruleset_version`, `enforcement_mode`
+- **Impact Assessment**: `affected_resources`, `impact_level`
+- **HITL Integration**: `requires_hitl`, `hitl_task_created` (FK to tasks)
+
+#### **Pipeline Event Logging Integration**
+- **Enhanced pipeline_event_logs**: Links to central audit system via `audit_event_id` FK
+- **Standards Compliance**: Uses `event_timestamp` naming per [Standards.md](../Standards.md)
+- **Cross-System Correlation**: Pipeline events correlated with business audit events
+- **Performance Separation**: High-frequency pipeline events separate from business audits
 - JSON column for flexible event metadata storage
 - Partitioning strategy for large-scale audit log management
 - Query optimization for common audit and compliance queries

@@ -128,6 +128,55 @@ Defines technical implementation of OCR processing, diagram extraction, canonica
 - **Change History**: Complete audit trail of all threshold value changes
 - **Rollback Capability**: Previous threshold values preserved for potential rollback
 
+#### **Multimodal Processing Audit Integration (MEDIUM Priority Enhancement)**
+**Comprehensive audit coverage for advanced image processing pipeline per [DatabaseSchemaSpec.md](DatabaseSchemaSpec.md) requirements:**
+
+**Required OCR Result Fields:**
+- **`language`**: OCR language configuration (e.g., 'eng', 'eng+fra')
+- **`engine_version`**: Tesseract version for processing traceability
+- **`preprocessing_applied`**: JSON array of preprocessing steps applied
+
+**Required Multimodal Description Fields:**
+- **`context_correlation_score`**: Correlation between OCR and vision results
+- **`sources_used`**: Array indicating which processing sources contributed
+- **`reference_numerals_correlated`**: Patent figure reference numbers identified
+- **`figure_type`**: Classification (system_architecture, flowchart, etc.)
+- **`technical_complexity`**: Assessment level (low, medium, high)
+- **`llm_model_used`**: LLM model identifier for description generation
+
+**Note**: Complete vectorization JSON schemas are defined in [RAGInfrastructureSpec.md](RAGInfrastructureSpec.md).
+```
+
+**OCR Processing Audit Events:**
+- **Low Confidence Tracking**: Automatic audit_events entry when OCR confidence < 0.7
+  - Event triggers HITL escalation with complete processing context
+  - Before/after state capture for all confidence-based decisions
+- **Multi-Engine Failures**: Audit trail when fallback OCR engines fail
+  - Impact assessment and recovery strategy documentation
+- **Processing Timeouts**: Timeout events with duration and recovery actions
+
+**Vision Analysis Integration:**
+- **PyTorch Model Failures**: Vision processing errors logged with technical context
+- **Spatial Analysis Issues**: Low-confidence layout detection audit events
+- **Multimodal Correlation**: OCR+Vision synthesis failures tracked for quality improvement
+
+**Human Correction Audit Requirements:**
+- **OCR Override Events**: MANDATORY rationale for human text corrections
+- **Description Modifications**: Track all changes to AI-generated multimodal descriptions
+- **Quality Validation**: Human approval/rejection of automated processing results
+
+**Database Integration:**
+```sql
+-- Link OCR/Vision results to audit events
+ALTER TABLE image_ocr_results ADD COLUMN audit_event_id UUID;
+ALTER TABLE image_vision_analysis ADD COLUMN audit_event_id UUID;
+
+-- Audit triggers for processing confidence thresholds
+CREATE TRIGGER audit_low_confidence_processing 
+AFTER INSERT ON image_ocr_results 
+WHEN NEW.confidence_score < 0.7;
+```
+
 ### Enforcement
 
 #### Retroactive Processing Rules

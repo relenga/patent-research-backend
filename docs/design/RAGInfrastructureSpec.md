@@ -33,6 +33,102 @@ Defines technical implementation of Retrieval-Augmented Generation (RAG) infrast
 - **Quality Validation**: Embedding dimension validation and NaN detection
 - **Performance Metrics**: Embedding generation speed and resource utilization
 
+### Vectorization Input JSON Schemas
+**Standardized JSON structures for content submission to vector database:**
+
+#### OCR Results Schema
+```json
+{
+  "schema_version": "1.0",
+  "content_type": "ocr_result",
+  "source_id": {
+    "image_id": "550e8400-e29b-41d4-a716-446655440000",
+    "document_uuid": "550e8400-e29b-41d4-a716-446655440001"
+  },
+  "processing_metadata": {
+    "ocr_engine": "tesseract",
+    "engine_version": "5.2.0",
+    "language": "eng",
+    "preprocessing_applied": ["contrast_enhancement", "noise_reduction"],
+    "processing_time_ms": 2340,
+    "processing_timestamp": "2026-01-07T10:30:00Z",
+    "status": "success"
+  },
+  "content": {
+    "extracted_text": "Figure 6 shows database server 606...",
+    "confidence_score": 0.87
+  },
+  "error": null
+}
+```
+
+#### Vision Analysis Schema
+```json
+{
+  "schema_version": "1.0",
+  "content_type": "vision_analysis",
+  "source_id": {
+    "image_id": "550e8400-e29b-41d4-a716-446655440000",
+    "document_uuid": "550e8400-e29b-41d4-a716-446655440001"
+  },
+  "processing_metadata": {
+    "processing_model": "pytorch_vision_v1.2",
+    "processing_timestamp": "2026-01-07T10:31:00Z",
+    "status": "success"
+  },
+  "content": {
+    "detected_objects": [
+      {"type": "rectangle", "bbox": [100, 150, 200, 250], "confidence": 0.92},
+      {"type": "arrow", "bbox": [250, 200, 300, 220], "confidence": 0.85},
+      {"type": "text_region", "bbox": [120, 160, 180, 180], "text": "606"}
+    ],
+    "spatial_relationships": [
+      {"from": "rectangle_1", "to": "rectangle_2", "relationship": "connected_by_arrow"},
+      {"from": "text_606", "to": "rectangle_1", "relationship": "labels"}
+    ],
+    "layout_classification": "flowchart",
+    "analysis_confidence": 0.78
+  },
+  "error": null
+}
+```
+
+#### Multimodal Description Schema
+```json
+{
+  "schema_version": "1.0",
+  "content_type": "multimodal_description",
+  "source_id": {
+    "image_id": "550e8400-e29b-41d4-a716-446655440000",
+    "document_uuid": "550e8400-e29b-41d4-a716-446655440001"
+  },
+  "processing_metadata": {
+    "llm_model_used": "local_patent_llm_v1",
+    "sources_used": ["ocr_tesseract", "vision_pytorch", "document_context"],
+    "generation_timestamp": "2026-01-07T10:32:00Z",
+    "status": "success"
+  },
+  "content": {
+    "multimodal_description": "Figure 6 illustrates a system architecture where database server 606 receives requests from user interface 604 and processes data through processing engine 602, showing the complete data flow for user request handling.",
+    "generation_confidence": 0.91,
+    "context_correlation_score": 0.88,
+    "reference_numerals_correlated": ["606", "604", "602"],
+    "figure_type": "system_architecture",
+    "technical_complexity": "medium",
+    "human_validated": false
+  },
+  "error": null
+}
+```
+
+#### Database Table Field Mapping
+**All JSON schema fields can be populated from enhanced database tables:**
+- **OCR Schema**: `image_ocr_results` table + `images` table (via JOIN)
+- **Vision Schema**: `image_vision_analysis` table + `images` table (via JOIN)
+- **Multimodal Schema**: `images` table with enhanced fields
+- **Source Traceability**: Complete document and image identification
+- **Error Handling**: Robust status and error reporting
+
 #### Embedding Storage & Retrieval
 - **Vector Database Integration**: pgvector extension in PostgreSQL for vector storage
 - **Index Optimization**: HNSW or IVF indices for fast similarity search
