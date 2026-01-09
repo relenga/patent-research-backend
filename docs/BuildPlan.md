@@ -201,14 +201,14 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 
 ---
 
-### P3.2B Advanced Pipeline Coordination - Full Implementation with Technical Safeguards
+### P3.2B Advanced Pipeline Coordination - DEFERRED
 **Maps to PRD:** Advanced pipeline coordination requirements with streamlined project-scale approach  
 **Proposal Reference**: [StateMachine.md](proposals/StateMachine.md) - Comprehensive coordination analysis  
 **Phase 3.2A Lessons Learned**: Maintain technical validation while leveraging operational advantages of research project scale
 
-**Status:** 📋 READY - Architect review complete, operational risk assessment confirms full feature viability  
-**Approach:** Full Alpha/Beta/Gamma/Delta implementation leveraging powerful hardware and single-user advantages  
-**Timeline Estimate:** 4-5 weeks total with technical safeguards and streamlined operational requirements
+**Status:** 🚫 DEFERRED - Strategic resource reallocation to core patent intelligence features  
+**Deferral Rationale:** Enterprise-scale coordination features over-engineered for single-user research (1-20 documents). P3.2A foundation sufficient for current needs. 4-5 week investment better allocated to P3.3-P3.6 core business value delivery.  
+**Timeline Impact:** 4-5 weeks reallocated to Document Ingestion + OCR + RAG System for immediate research productivity gains
 
 **Operational Risk Reduction Context:**
 - **Hardware Capacity**: RTX-5090 + 96GB RAM eliminates resource optimization complexity  

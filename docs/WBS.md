@@ -9,12 +9,17 @@
 
 ## Task Management System Status
 
-**Current Implementation Status:** 🔄 Partially Complete - P3.1 & P3.2A Operational
+**Current Implementation Status:** 🔄 Partially Complete - P3.1 & P3.2A Operational, P3.2B DEFERRED
 
 **Design Status:**
 - ✅ **Phase 1 (Complete):** Background task infrastructure (ARQ/Redis) deliberately removed
 - ✅ **Phase 2 (Complete):** Abstract contracts and data models defined
-- 🔄 **Phase 3 (Partially Complete):** P3.1 Database complete, P3.2A Pipeline coordination complete, remaining tasks planned
+- 🔄 **Phase 3 (Partially Complete):** P3.1 Database complete, P3.2A Pipeline coordination complete, **P3.2B DEFERRED for strategic resource reallocation**
+
+**Strategic Decision - P3.2B Deferral:**
+- **Rationale:** Advanced pipeline coordination over-engineered for single-user research (1-20 documents)
+- **Resource Reallocation:** 4-5 weeks from P3.2B → P3.3 Document Ingestion + P3.4 OCR + P3.6 RAG
+- **Value Impact:** Immediate patent intelligence capabilities vs enterprise coordination features
 
 **Key Architecture Decisions:**
 - **No Background Queue System:** Phase 1 removed ARQ/Redis - tasks managed through database persistence only
@@ -62,22 +67,22 @@
 - **Service Integration**: Stable concrete service implementation resolving circular import issues
 - **State Machine Compliance**: All transitions follow PipelineStateMachine.md authority exactly
 
-### 3.2B Advanced Pipeline Coordination (P3.2B) - Full Implementation with Technical Safeguards
-**Status**: READY - Architect review complete, operational risk reduction enables full feature implementation  
-**Reference**: [StateMachine.md proposal](proposals/StateMachine.md) contains detailed analysis of advanced coordination features  
-**Approach**: Full Alpha/Beta/Gamma/Delta implementation leveraging project scale advantages with technical validation  
-**Total Duration**: 4-5 weeks with streamlined operational requirements and maintained technical safeguards
+### 3.2B Advanced Pipeline Coordination (P3.2B) - DEFERRED
+**Status**: DEFERRED - Strategic resource reallocation to core patent intelligence features  
+**Deferral Decision**: Enterprise coordination features over-engineered for single-user research system (1-20 documents)  
+**P3.2A Assessment**: Current foundation provides sufficient coordination for target use case  
+**Resource Reallocation**: 4-5 weeks redirected to P3.3 Document Ingestion + P3.4 OCR + P3.6 RAG for immediate business value
 
 #### Technical Validation Phase - Streamlined (2-3 days)
 *Duration: 2-3 days total*
 
-- **3.2B.1 REPROCESSING State Authority Resolution** (1 day)
+- **3.2B.1 REPROCESSING State Authority Resolution** (Deferred to later 1 day)
   - PipelineStateMachine.md extension approval for REPROCESSING state
   - Single-user decision with technical validation of state integration
   - **Dependency**: Architect risk assessment complete
   - **Success Criteria**: Authority approval with technical integration validation
 
-- **3.2B.2 Document Lifecycle + Infrastructure Pattern Documentation** (5 days)
+- **3.2B.2 Document Lifecycle + Infrastructure Pattern Documentation** (Deferred to later 5 days)
   - User interface for document/image CRUD operations using existing infrastructure
   - Soft delete reason codes using existing SoftDeleteMixin, document management UI with version comparison
   - Granular image editing via individual REPROCESSING, lightweight embedded service pattern documentation
@@ -88,17 +93,17 @@
 #### Phase 3.2B-Alpha: Complex Timeout and State Management (6-8 days)
 *Dependencies: Technical validation complete, authority resolution approved*
 
-- **3.2B-Alpha.1 Complex Timeout Matrices Implementation** (3-4 days)
+- **3.2B-Alpha.1 Complex Timeout Matrices Implementation** (Deferred to later 3-4 days)
   - Document class-specific timeout handling replacing simple 24-hour timeout
   - Patent vs office action vs product document timeout strategies
   - **Success Criteria**: Timeout logic operational, integrates with existing state machine
 
-- **3.2B-Alpha.2 REPROCESSING State Implementation** (2-3 days)  
+- **3.2B-Alpha.2 REPROCESSING State Implementation** (Deferred to later 2-3 days)  
   - New state for handling model updates and administrative overrides
   - State machine extension with database schema updates and transition rules
   - **Success Criteria**: REPROCESSING state integrated following PipelineStateMachine.md authority
 
-- **3.2B-Alpha.3 Integration Testing and Validation** (1 day)
+- **3.2B-Alpha.3 Integration Testing and Validation** (Deferred to later 1 day)
   - Alpha features validated against Phase 3.2A baseline
   - Technical validation with streamlined testing focused on functionality
   - **Success Criteria**: No regression of 3.2A functionality, new features operational
@@ -106,17 +111,17 @@
 #### Phase 3.2B-Beta: Advanced Coordination and Processing (6-8 days)
 *Dependencies: 3.2B-Alpha complete and validated*
 
-- **3.2B-Beta.1 Advanced Priority Queue System** (2-3 days)
+- **3.2B-Beta.1 Advanced Priority Queue System** (Deferred to later 2-3 days)
   - Dynamic resource allocation beyond current basic 3-level priority system  
   - Intelligent queue management based on document complexity and resource availability
   - **Success Criteria**: Resource allocation optimization without deadlock risks
 
-- **3.2B-Beta.2 Batch Processing Optimizations** (2-3 days)
+- **3.2B-Beta.2 Batch Processing Optimizations** (Deferred to later 2-3 days)
   - Optimized processing for multiple documents with similar characteristics
   - Resource sharing and processing efficiency improvements for small document sets
   - **Success Criteria**: Improved throughput without compromising individual document quality
 
-- **3.2B-Beta.3 Quality Scoring Automation** (2 days)
+- **3.2B-Beta.3 Quality Scoring Automation** (Deferred to later 2 days)
   - Automatic quality assessment for processed documents and diagrams
   - Quality metrics and confidence scoring with automated validation rules
   - **Success Criteria**: Quality scoring operational and integrated with completion thresholds
@@ -124,12 +129,12 @@
 #### Phase 3.2B-Gamma: Research Monitoring and Analytics (6-8 days)
 *Dependencies: 3.2B-Beta complete, event publishing operational*
 
-- **3.2B-Gamma.1 Pipeline Analytics Dashboard** (3-4 days)
+- **3.2B-Gamma.1 Pipeline Analytics Dashboard** (Deferred to later 3-4 days)
   - Real-time monitoring and performance analytics adapted for research usage
   - Processing metrics, bottleneck identification, resource utilization tracking
   - **Success Criteria**: Dashboard provides actionable insights for pipeline optimization
 
-- **3.2B-Gamma.2 Performance Optimization Analytics** (3-4 days)
+- **3.2B-Gamma.2 Performance Optimization Analytics** (Deferred to later 3-4 days)
   - Advanced analytics for resource allocation and performance tuning
   - Historical analysis, trend identification optimized for small document sets
   - **Success Criteria**: Analytics enable data-driven pipeline optimization for research workloads
@@ -137,13 +142,13 @@
 #### Phase 3.2B-Delta: Resource Allocation Optimization (5-6 days)
 *Dependencies: 3.2B-Gamma analytics operational*
 
-- **3.2B-Delta.1 Advanced Resource Algorithms** (3-4 days)
+- **3.2B-Delta.1 Advanced Resource Algorithms** (Deferred to later 3-4 days)
 
   - Intelligent resource allocation based on document complexity and processing history
   - Simplified algorithms optimized for powerful hardware and small document sets
   - **Success Criteria**: Resource allocation optimization improves processing efficiency without system complexity
 
-- **3.2B-Delta.2 Load Balancing and Scaling** (2 days)  
+- **3.2B-Delta.2 Load Balancing and Scaling** (Deferred to later 2 days)  
   - Dynamic load balancing adapted for single-user, high-capacity hardware scenario
   - Processing load distribution optimized for RTX-5090 + 96GB RAM configuration
   - **Success Criteria**: System handles variable loads efficiently leveraging available hardware capacity
@@ -151,12 +156,12 @@
 #### Phase 3.2B Integration and Final Validation (3-4 days)
 *Dependencies: All Alpha/Beta/Gamma/Delta sub-phases complete*
 
-- **3.2B.98 Comprehensive Integration Testing** (2-3 days)
+- **3.2B.98 Comprehensive Integration Testing** (Deferred to later 2-3 days)
   - All 3.2B sub-phases tested together as integrated coordination system
   - End-to-end testing with streamlined validation focused on functionality
   - **Success Criteria**: Integrated system operational with all advanced features functional
 
-- **3.2B.99 System Validation and Deployment Readiness** (1 day)
+- **3.2B.99 System Validation and Deployment Readiness** (Deferred to later 1 day)
   - Final validation with performance confirmation on target hardware
   - Research project deployment readiness assessment
   - **Success Criteria**: System ready for research usage with advanced coordination features operational
