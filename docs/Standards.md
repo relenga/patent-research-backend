@@ -97,7 +97,7 @@ All components MUST use these standardized services. Direct usage of alternative
 **Name**: Tesseract OCR + Diagram Canonicalization Service  
 **Purpose**: Document OCR, diagram extraction, duplicate detection, human-in-the-loop processing  
 **Required Usage**: All document processing MUST use OCR service with HITL workflows  
-**Defined In**: `OCRAndDiagramSpec.md`  
+**Defined In**: `DocumentProcessingPipelineSpec.md`  
 **FORBIDDEN**: Alternative OCR engines, fully automated diagram processing  
 **Approach**: OCR + Human Correction (approved Phase 3 decision)
 

@@ -3,7 +3,7 @@
 **Status**: PROPOSAL - Awaiting Technical Review and Implementation Planning  
 **Authority**: Enhancement proposal for existing Phase 3 implementation  
 **Standards Compliance**: [Standards.md](../Standards.md) - MANDATORY common services usage, configuration patterns, and logging requirements  
-**Cross-References**: [PipelineStateMachine.md](../PipelineStateMachine.md), [OCRAndDiagramSpec.md](../design/OCRAndDiagramSpec.md), [DatabaseSchemaSpec.md](../design/DatabaseSchemaSpec.md)
+**Cross-References**: [PipelineStateMachine.md](../PipelineStateMachine.md), [DocumentProcessingPipelineSpec.md](../design/DocumentProcessingPipelineSpec.md), [DatabaseSchemaSpec.md](../design/DatabaseSchemaSpec.md)
 
 ## Executive Summary
 
