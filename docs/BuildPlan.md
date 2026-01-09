@@ -380,7 +380,7 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 - Document validation, format checking, and error recovery
 
 **Explicitly Not In Scope:**
-- Research agent automation (external API integration)
+- Research agent automation (local LLM-based, deferred to Phase 4+)
 - Complex document parsing (claims parsing, legal section detection)
 - Document comparison or similarity detection
 - Batch processing or bulk upload features
