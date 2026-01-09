@@ -110,6 +110,18 @@ erDiagram
         uuid updated_by FK
     }
     
+    AUDIT_MESSAGE_FILTERS {
+        uuid filter_id PK
+        uuid audit_event_id FK
+        varchar filter_reason
+        uuid created_by FK
+        timestamp filter_created
+        boolean is_active
+        timestamp created_timestamp
+        timestamp updated_timestamp
+        uuid updated_by FK
+    }
+    
     PROVENANCE_RECORDS {
         uuid provenance_record_id PK
         uuid source_art_id
@@ -128,6 +140,7 @@ erDiagram
     TASKS_ref ||--o{ AUDIT_EVENTS : triggers
     AUDIT_EVENTS ||--o{ PIPELINE_EVENT_LOGS : logged_as
     AUDIT_EVENTS ||--o{ PIPELINE_OVERRIDE_AUDITS : overridden_by
+    AUDIT_EVENTS ||--o{ AUDIT_MESSAGE_FILTERS : can_be_filtered
 ```
 
 ## Referenced Tables Legend
@@ -143,6 +156,8 @@ erDiagram
 - `PIPELINE_OVERRIDE_AUDITS.administrator_id` → `USERS.user_id`
 - `PIPELINE_OVERRIDE_AUDITS.created_by` → `USERS.user_id`
 - `PIPELINE_OVERRIDE_AUDITS.updated_by` → `USERS.user_id`
+- `AUDIT_MESSAGE_FILTERS.created_by` → `USERS.user_id`
+- `AUDIT_MESSAGE_FILTERS.updated_by` → `USERS.user_id`
 - `PROVENANCE_RECORDS.created_by` → `USERS.user_id`
 - `PROVENANCE_RECORDS.updated_by` → `USERS.user_id`
 
@@ -152,14 +167,16 @@ erDiagram
 **Internal domain relationships:**
 - `PIPELINE_EVENT_LOGS.audit_event_id` → `AUDIT_EVENTS.audit_event_id`
 - `PIPELINE_OVERRIDE_AUDITS.audit_event_id` → `AUDIT_EVENTS.audit_event_id`
+- `AUDIT_MESSAGE_FILTERS.audit_event_id` → `AUDIT_EVENTS.audit_event_id`
 
-## Domain Tables (4 + 1 referenced)
+## Domain Tables (5 + 1 referenced)
 
 1. **`AUDIT_EVENTS`** - Primary audit event logging (immutable)
 2. **`PIPELINE_EVENT_LOGS`** - Operational pipeline event correlation
 3. **`PIPELINE_OVERRIDE_AUDITS`** - Administrative override tracking
-4. **`PROVENANCE_RECORDS`** - Lineage and transformation tracking
-5. **`TASKS`** (referenced) - HITL tasks from Agent & Task Management domain
+4. **`AUDIT_MESSAGE_FILTERS`** - User-controlled audit message filtering for UI noise reduction
+5. **`PROVENANCE_RECORDS`** - Lineage and transformation tracking
+6. **`TASKS`** (referenced) - HITL tasks from Agent & Task Management domain
 
 ## Key Features
 
@@ -167,6 +184,7 @@ erDiagram
 - **Pipeline Integration**: Operational event correlation with delivery tracking
 - **Administrative Oversight**: Override actions with justification requirements
 - **Content Lineage**: Transformation and derivation tracking with confidence
+- **Audit Noise Filtering**: User-controlled filtering of repetitive audit messages for improved UI experience
 
 ## Audit Workflow
 
@@ -177,9 +195,9 @@ erDiagram
 
 ---
 
-**Last Updated**: January 7, 2026  
-**Domain Tables**: 4 audit tables + 1 referenced  
-**Status**: Comprehensive audit and compliance framework
+**Last Updated**: January 8, 2026  
+**Domain Tables**: 5 audit tables + 1 referenced  
+**Status**: Comprehensive audit and compliance framework with UI noise filtering
 
 ---
 **VISUAL AUTHORITY** | **Implementation**: [database.py](../src/app/models/database.py) | **Requirements**: [LoggingAndEventsSpec.md](../design/LoggingAndEventsSpec.md), [DatabaseSchemaSpec.md](../design/DatabaseSchemaSpec.md)
