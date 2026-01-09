@@ -257,32 +257,42 @@ All list endpoints MUST support:
 
 ## Versioning Standards
 
-### Prompt Template Versioning (MANDATORY)
-- **Explicit Versioning**: All templates MUST have semantic version identifiers (v1.0, v1.1, etc.)
-- **Immutability Rule**: Templates are IMMUTABLE once used in recorded agent execution
-- **Version Changes**: Template modifications MUST create new version, never overwrite existing
-- **Lineage Tracking**: Complete chain from original through all template versions
-- **Reference Integrity**: Agent execution logs MUST reference specific template version
+### Prompt Template Versioning (Phase 4+ Requirement)
+- **Basic Identification**: Phase 3 templates identified by simple name/timestamp only
+- **Phase 4+ Requirements**: Explicit semantic versioning (v1.0, v1.1, etc.)
+- **Phase 4+ Immutability**: Templates immutable once used in recorded executions
+- **Phase 4+ Version Changes**: Template modifications create new versions
+- **Phase 4+ Lineage**: Complete template version chains
+- **Phase 4+ Reference Integrity**: Execution logs reference specific template versions
 
-### Diagram Description Versioning (MANDATORY)
-- **Canonical Versions**: All diagram descriptions MUST be versioned with unique identifiers
-- **Reuse References**: Document references MUST specify exact description version
-- **Non-Destructive Updates**: Updates create new versions, NEVER overwrite historical versions
-- **Version Progression**: Clear parent-child relationships between description versions
-- **Human Approval**: ALL description version changes require explicit human approval
+### Diagram Description Versioning (Phase 4+ Requirement)
+- **Basic Tracking**: Phase 3 descriptions use simple timestamp/edit tracking
+- **Phase 4+ Canonical Versions**: All descriptions versioned with unique identifiers
+- **Phase 4+ Reuse References**: Document references specify exact description versions
+- **Phase 4+ Non-Destructive Updates**: Updates create new versions, preserve historical
+- **Phase 4+ Version Progression**: Parent-child relationships between description versions
+- **Phase 4+ Human Approval**: Description version changes require explicit approval
 
-### Agent Output Versioning (MANDATORY)
-- **Artifact Versioning**: ALL agent outputs are versioned artifacts with unique identifiers
-- **Revision Linkage**: Output revisions create new versions linked by lineage chain
-- **No Destructive Overwrites**: Original agent outputs MUST be preserved permanently
-- **Version Relationships**: Complete audit trail from original through all revisions
-- **Rationale Capture**: Human-requested changes MUST include rationale and approval
+### Agent Output Versioning (Phase 4+ Requirement)
+- **Basic Preservation**: Phase 3 agent outputs preserved with timestamps
+- **Phase 4+ Artifact Versioning**: All outputs versioned artifacts with unique identifiers
+- **Phase 4+ Revision Linkage**: Output revisions linked by lineage chains
+- **Phase 4+ No Overwrites**: Original agent outputs preserved permanently
+- **Phase 4+ Version Relationships**: Complete audit trail through all revisions
+- **Phase 4+ Rationale Capture**: Human changes include rationale and approval
 
-### Lineage Preservation Rules (MANDATORY)
-- **Complete Chains**: Full lineage from original artifact through all versions
-- **Immutable History**: No deletion or modification of historical version records
-- **Cross-Reference Integrity**: Version references MUST remain valid permanently
-- **Audit Completeness**: All version changes logged with complete context
+### Lineage Preservation Rules (Phase 4+ Requirement)
+- **Basic Tracking**: Phase 3 maintains simple parent-child document relationships
+- **Phase 4+ Complete Chains**: Full lineage from original artifact through all versions
+- **Phase 4+ Immutable History**: No deletion/modification of historical version records
+- **Phase 4+ Cross-Reference Integrity**: Version references remain valid permanently
+- **Phase 4+ Audit Completeness**: All version changes logged with complete context
+
+### Phase 3 Essential Versioning (MANDATORY)
+- **API Versioning**: Path-based versioning (`/api/v1/`) required for all endpoints
+- **Document Lineage**: Basic parent-child relationships for document modifications
+- **Timestamp Tracking**: All artifacts timestamped with creation/modification times
+- **Simple Preservation**: Original documents and outputs preserved (no overwrites)
 
 ---
 
