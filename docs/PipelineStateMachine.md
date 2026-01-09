@@ -146,7 +146,6 @@ Completion = (READY + DUPLICATE_LINKED + IGNORED) / Total Images
 | INTERPRETED | Textual/structural meaning extracted |
 | NEEDS_HITL | Requires human confirmation |
 | CANONICALIZED | Approved diagram description exists |
-| REPROCESSING | Administrative reanalysis of existing processed entity |
 | READY | Eligible for downstream reasoning (corpus constraints apply) |
 
 ### Phase 3.2A Diagram Classification System (3-Type)
@@ -350,7 +349,19 @@ All HITL actions:
 
 ---
 
-## REPROCESSING State Specification (Phase 3.2B)
+## Pipeline State Summary
+
+**Document States:**
+- INGESTED → NORMALIZED → TEXT_EXTRACTED → IMAGES_EXTRACTED → PARTIALLY_PROCESSED/READY → BLOCKED/FAILED
+
+**Image States:**
+- EXTRACTED → OCR_PENDING → OCR_COMPLETED → CANONICAL/IGNORED/DUPLICATE
+
+---
+
+**Status**: Core pipeline state machine complete and operational  
+**Implementation**: [PipelineExecutionSpec.md](design/PipelineExecutionSpec.md)  
+**Database Support**: [DatabaseSchemaSpec.md](design/DatabaseSchemaSpec.md)
 
 ### Authority Approval
 **Status**: APPROVED - January 5, 2026  
@@ -359,143 +370,21 @@ All HITL actions:
 
 ### Entity Scope
 
-**REPROCESSING State applies to:**
-- **Documents**: Full document reanalysis (text + images)
-- **Images**: Individual image reinterpretation  
-- **DiagramDescriptions**: Canonical description updates
+**Note**: REPROCESSING capabilities are planned for Phase 3.2B but not implemented in current system scope.
 
-**REPROCESSING State does NOT apply to:**
-- TextBlocks: Text extraction is deterministic
-- LineageRecords: Audit trails are immutable
-- Tasks: HITL tasks have their own lifecycle
 
-### Preservation vs Regeneration Logic
 
-**Preserved During Reprocessing:**
-- Original artifact files (PDFs, images) - never modified
-- Complete audit trail and provenance records
-- Existing canonical descriptions (until explicitly replaced)
-- Document metadata (title, source, ingestion timestamp)
 
-**Regenerated During Reprocessing:**
-- Text extraction output (if document reprocessing)
-- Image analysis results (OCR, vision model output)
-- Diagram descriptions (if image reprocessing)
-- State transition audit events
 
-**Versioning Approach:**
-- Original results preserved with _archived suffix
-- New results replace current active versions
-- Provenance records link original → reprocessed versions
 
-### State Transition Rules
 
-**Valid Entry Paths to REPROCESSING:**
-- READY → REPROCESSING (administrative request)
-- CANONICALIZED → REPROCESSING (description update)
-- DUPLICATE_LINKED → REPROCESSING (canonical reference change)
-- BLOCKED → REPROCESSING (after HITL resolution with reprocessing flag)
 
-**Valid Exit Paths from REPROCESSING:**
-- REPROCESSING → READY (successful reprocessing completion)
-- REPROCESSING → FAILED (reprocessing failed, preserved original)
-- REPROCESSING → BLOCKED (reprocessing requires human intervention)
 
-**Forbidden Transitions:**
-- REPROCESSING → INGESTED (would lose provenance)
-- FAILED → REPROCESSING (use administrative override instead)
-- Any state → REPROCESSING without explicit trigger event
 
-### Completion Logic
 
-**Successful Completion (REPROCESSING → READY):**
-- All processing stages completed successfully
-- New results pass validation checks
-- Provenance links established to original versions
-- Audit trail shows complete reprocessing workflow
 
-**Timeout and Escalation:**
-- REPROCESSING timeout: 24 hours for documents, 4 hours for individual images
-- After timeout: Administrative notification, option to extend or abort
-- Abort action: Restore original results, mark REPROCESSING → FAILED
 
-### Concurrent Processing Logic
 
-**Resource Allocation:**
-- REPROCESSING entities get standard priority (not higher than new content)
-- Maximum 20% of processing capacity reserved for reprocessing
-- Reprocessing suspended if new document queue > 10 items
-
-**Conflict Resolution:**
-- If original entity in REPROCESSING, new duplicates link to archived canonical
-- If canonical entity in REPROCESSING, duplicates remain BLOCKED until completion
-
-### Unified Image Handling Integration
-
-**REPROCESSING + Unified Image Approach:**
-- All visual content follows same three options: describe/ignore/duplicate
-- REPROCESSING respects original classification but allows reclassification
-- Reprocessed images can change from IGNORED → CANONICALIZED if analysis improves
-- Duplicate relationships preserved but can be updated if canonical changes
-
-**Canonical Registry Integration:**
-- REPROCESSING of canonical descriptions updates all linked duplicates
-- Duplicate images can be reprocessed to become canonical if original quality poor
-- Registry maintains version history for reprocessed canonical descriptions
-
-### Audit Requirements
-
-**Mandatory Audit Events:**
-- REPROCESSING trigger with reason and authorization
-- Original state preservation with archive timestamp
-- Processing stage completions during reprocessing
-- Final state transition with success/failure indication
-
-**Provenance Linking:**
-- Reprocessed entities maintain derived_from links to original versions
-- Original→reprocessed relationship captured in provenance graph
-- Human decisions during reprocessing captured with rationale
-
-### Cascade Behavior Specification
-
-**Authority Decision**: Immediate Cascade (Option A) - APPROVED January 5, 2026
-
-**Cascade Timing**: IMMEDIATE
-
-**On REPROCESSING State Entry:**
-- Delete all vector embeddings for entity_id
-- Remove all search index entries for entity_id  
-- Clear RAG retrieval cache for entity_id
-- Mark analytics records as under_reprocessing
-- Log cascade deletion counts for audit
-
-**On REPROCESSING State Exit:**
-- Generate new vector embeddings
-- Rebuild search index entries
-- Update RAG retrieval availability
-- Finalize analytics records with reprocessing flag
-- Log cascade rebuild completion for audit
-
-**Vector Database Behavior:**
-- Immediate deletion of all embeddings when entering REPROCESSING
-- Embedding deletion logged with counts and timestamps
-- New embeddings generated during normal processing pipeline
-- No storage bloat from accumulated old embeddings
-
-**RAG System Integration:**
-- Reprocessing entities NOT AVAILABLE for RAG retrieval during processing
-- Query results exclude reprocessing entities completely
-- No mixed old/new content in single retrieval context
-
-**Rollback Requirements:**
-- If REPROCESSING → FAILED: restore archived embeddings immediately
-- All deleted embeddings archived (not permanently destroyed) during cascade
-- Rollback completion target: <1 hour for documents, <15 minutes for images
-
-**Performance Targets:**
-- Immediate deletion: <30 seconds for documents, <10 seconds for images
-- Rebuilding completion: <5 minutes for documents, <2 minutes for images
-- Maximum 10% of system resources for cascade operations
 
 ---
 

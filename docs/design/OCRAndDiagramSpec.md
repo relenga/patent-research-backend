@@ -182,8 +182,8 @@ WHEN NEW.confidence_score < 0.7;
 #### Retroactive Processing Rules
 - **Changing thresholds does not retroactively alter prior canonicalization decisions** unless explicitly reprocessed
 - **Historical Decisions**: Existing diagram relationships preserved with original threshold values
-- **Explicit Reprocessing**: Human can trigger reprocessing with new thresholds if required
-- **Audit Trail Preservation**: Original decisions and reprocessing events both logged
+- **Threshold Adjustments**: Changes do not retroactively alter prior canonicalization decisions
+- **Audit Trail Preservation**: Original decisions and threshold changes both logged
 
 ### HITL Escalation Framework
 

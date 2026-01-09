@@ -69,15 +69,16 @@ Defines human-in-the-loop task lifecycle, assignment model, evidence bundle stru
 
 ### Assignment Model (APPROVED APPROACH)
 
-#### Single Reviewer Strategy
-- [x] **Single Human Reviewer**: All tasks assigned to single reviewer for Phase 3
-- [x] **Reviewer Selection**: Dropdown or fixed identifier selection (no authentication)
-- [x] **Task Assignment**: Automatic assignment to selected reviewer
-- [x] **Session Tracking**: Basic context preservation across browser sessions
-- [x] **No User Management**: No login, passwords, roles, or multi-user support
+#### Simple Identity Strategy (No Authentication)
+- [x] **Simple Identity Model**: Reviewer selection via dropdown from users table (no login/passwords)
+- [x] **Session-Based Selection**: Selected reviewer persists across browser sessions
+- [x] **Per-Entity Attribution**: All entities created in session attributed to selected reviewer  
+- [x] **LLM Separation**: Automated processes use distinct system userids for clear audit trails
+- [x] **Litigation-Ready Audit**: All actions tracked with reviewer attribution for legal defensibility
+- [x] **Zero Authentication**: No login, passwords, roles, or user management complexity
 
 #### Actor Identity Integration
-- [x] **Simple Identity Model**: Reviewer name stored for audit compliance only
+- [x] **Users Table Source**: Reviewer dropdown populated from existing users table
 - [x] **Session Continuity**: Task state preserved across reviewer sessions
 - [x] **Activity Logging**: All reviewer actions logged with reviewer identifier
 - [x] **Context Preservation**: Task evidence and decisions preserved
@@ -160,9 +161,9 @@ Defines human-in-the-loop task lifecycle, assignment model, evidence bundle stru
    - **Rationale**: Avoids multi-server lifecycle instability; simplifies HITL workflows; faster iteration for single reviewer; backend governs all state
    - **Constraints**: HTMX for interactivity only; no separate frontend build; API remains reusable
 
-2. **Assignment Strategy**: **Single reviewer model** for Phase 3
-   - **Rationale**: Single human reviewer; no authentication complexity; simple identity tracking
-   - **Constraints**: Dropdown/fixed reviewer selection; no multi-user workflows
+2. **Identity Strategy**: **Simple identity with session-based selection** for Phase 3
+   - **Rationale**: Session-persistent reviewer selection; zero authentication complexity; litigation-grade audit trails; clear human vs. LLM attribution
+   - **Constraints**: Dropdown selection from users table; session-scoped attribution; no authentication infrastructure
 
 3. **Evidence Persistence**: Reference-based approach with full audit trails
 4. **Task Granularity**: Structured task definitions aligned with agent outputs

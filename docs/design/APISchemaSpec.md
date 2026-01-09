@@ -19,9 +19,7 @@ Defines domain-specific API endpoints and request/response schemas for documents
 - [ ] **PUT /api/v1/documents/{id}** - Document metadata updates
 - [ ] **GET /api/v1/documents/{id}/versions** - Document version history
 - [ ] **POST /api/v1/documents/{id}/transition** - Pipeline state transitions
-- [ ] **DELETE /api/v1/documents/{id}** - Soft delete with reason (P3.2B.2)
-- [ ] **POST /api/v1/documents/{id}/restore** - Restore soft-deleted document (P3.2B.2)
-- [ ] **POST /api/v1/documents/{id}/reprocess** - Trigger REPROCESSING state (P3.2B.2)
+- [ ] **DELETE /api/v1/documents/{id}** - Soft delete with reason
 
 #### Artifact & Content APIs  
 - [ ] **GET /api/v1/documents/{id}/artifacts** - Document artifact listing
@@ -30,7 +28,6 @@ Defines domain-specific API endpoints and request/response schemas for documents
 - [ ] **PUT /api/v1/artifacts/{id}** - Artifact updates and versioning
 - [ ] **DELETE /api/v1/artifacts/{id}** - Soft delete artifact with reason (P3.2B.2)
 - [ ] **POST /api/v1/artifacts/{id}/restore** - Restore soft-deleted artifact (P3.2B.2)
-- [ ] **POST /api/v1/artifacts/{id}/reprocess** - Individual artifact REPROCESSING (P3.2B.2)
 - [ ] **PUT /api/v1/artifacts/{id}/description** - Edit image description (P3.2B.2)
 - [ ] **POST /api/v1/artifacts/{id}/ignore** - Mark image as ignored (P3.2B.2)
 
@@ -47,10 +44,10 @@ Defines domain-specific API endpoints and request/response schemas for documents
 - [ ] **GET /api/v1/corpora/{corpus_id}/statistics** - Corpus analytics
 
 #### Task Management APIs
-- [ ] **GET /api/v1/tasks/assigned/{actor_id}** - Assigned task listing
-- [ ] **PUT /api/v1/tasks/{id}/complete** - Task completion with evidence
+- [ ] **GET /api/v1/tasks/assigned/{actor_id}** - Tasks for specific user (from session-selected reviewer)
+- [ ] **PUT /api/v1/tasks/{id}/complete** - Task completion with session reviewer attribution
 - [ ] **GET /api/v1/tasks/{id}/evidence** - Evidence bundle retrieval
-- [ ] **POST /api/v1/tasks/{id}/reassign** - Task reassignment
+- [ ] **POST /api/v1/tasks/{id}/reassign** - Task reassignment (session reviewer performing reassignment)
 
 #### Agent Execution APIs
 - [ ] **POST /api/v1/agents/{agent_id}/execute** - Agent execution trigger
@@ -65,6 +62,13 @@ Defines domain-specific API endpoints and request/response schemas for documents
 - [ ] **GET /api/v1/claims** - Claim listing with filtering
 
 ### Request/Response Schemas
+
+#### Identity Model Integration
+**Simple Identity (No Authentication)**: All API endpoints assume session-based reviewer selection
+- **{actor_id}** parameters: User ID from session-selected reviewer (dropdown selection from users table)
+- **Attribution Pattern**: Session reviewer ID automatically applied to all created/modified entities
+- **LLM Operations**: System processes use distinct userids separate from human reviewer selection
+- **Audit Compliance**: All API operations include reviewer attribution for litigation requirements
 
 #### Canonical Response Envelope
 **Reference**: [Standards.md](../Standards.md) defines complete envelope specification  

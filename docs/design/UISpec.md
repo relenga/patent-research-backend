@@ -19,12 +19,9 @@ Defines technical implementation of user interfaces for document management, hum
 
 ### Architecture Foundation
 
-#### Document Lifecycle Management UI (P3.2B.2)
+#### Core Document Management UI
 - **Document Management Interface**: CRUD operations for documents using existing SoftDeleteMixin
-- **Soft Delete with Reason**: Delete confirmation dialog with mandatory reason capture
-- **Restore Interface**: Undelete functionality for soft-deleted documents
-- **Version Comparison**: Before/after views for REPROCESSING operations using existing DocumentVersion
-- **Granular Image Editing**: Individual image REPROCESSING interface with state management
+- **Version Comparison**: Before/after views for document operations using existing DocumentVersion
 - **Image State Management**: Mark images as ignored/duplicate with reason tracking
 
 #### FastAPI + Jinja2 Template Engine

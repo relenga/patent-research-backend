@@ -2,8 +2,9 @@
 
 **Status**: APPROVED - PostgreSQL Decision Confirmed (Dec 30, 2025)  
 **Authority**: Implementation guidance for P3.1 Database Schema & Persistence Layer  
+**State Machine Authority**: [PipelineStateMachine.md](../PipelineStateMachine.md) - AUTHORITATIVE state definitions for all pipeline state fields  
 **Database Standards**: [Standards.md](../Standards.md) - MANDATORY persistence service usage, naming conventions, and session management  
-**Cross-References**: [CorpusModel.md](../../CorpusModel.md), [ProvenanceAudit.md](../../ProvenanceAudit.md), [PipelineStateMachine.md](../../PipelineStateMachine.md)
+**Cross-References**: [CorpusModel.md](../../CorpusModel.md), [ProvenanceAudit.md](../../ProvenanceAudit.md), [PipelineExecutionSpec.md](./PipelineExecutionSpec.md)
 
 ## Purpose
 
@@ -18,21 +19,21 @@ Defines complete relational database schema for patent intelligence system suppo
   - [ ] Document metadata (id, title, source, ingestion_timestamp)
   - [ ] Document type classification (patent, prior_art, office_action, etc.)
   - [ ] Corpus assignment (single corpus per document)
-  - [ ] Current state tracking (PipelineStateMachine states)
-  - [ ] Soft delete support (is_deleted, deleted_at, deletion_reason) - P3.2B.2
+  - [ ] Pipeline state tracking per [PipelineStateMachine.md](../PipelineStateMachine.md) AUTHORITATIVE definitions
+  - [ ] Soft delete support (is_deleted, deleted_at, deletion_reason)
 
 - **DocumentVersion**: Immutable document versions
   - [ ] Version tracking with parent relationships
   - [ ] Content snapshots for auditability
   - [ ] Transformation tracking
-  - [ ] REPROCESSING version preservation (archived versions) - P3.2B.2
+  - [ ] Archive version preservation with audit trails
 
 - **Artifact**: Document-derived content
   - [ ] Text extractions, image references, diagram representations
   - [ ] Artifact type enumeration
   - [ ] Parent document relationships
-  - [ ] Soft delete support (is_deleted, deleted_at, deletion_reason) - P3.2B.2
-  - [ ] Individual REPROCESSING state tracking - P3.2B.2
+  - [ ] Soft delete support (is_deleted, deleted_at, deletion_reason)
+  - [ ] Pipeline state tracking per [PipelineStateMachine.md](../PipelineStateMachine.md)
 
 - **DiagramCanonical**: Structured diagram representations
   - [ ] Canonical diagram format definition
@@ -74,14 +75,15 @@ Defines complete relational database schema for patent intelligence system suppo
 
 ### Actor Identity Model
 
-**Requirements**: Single reviewer model without authentication system
+**Requirements**: Simple identity with session-based reviewer selection (no authentication)
 
-- [x] **Reviewer Entity**: Simple reviewer identifier (dropdown selection)
-- [x] **Actor Types**: Human reviewer, system process, agent execution
-- [x] **Session Tracking**: Basic context preservation for HITL task continuity
-- [x] **Audit Identity**: Reviewer name stored for provenance and audit trails only
-- [x] **No Authentication**: No login, passwords, roles, or user management
-- [x] **Phase Compliance**: Maintains Phase 1 auth removal constraints
+- [x] **Users Table Source**: Dropdown populated from existing users table for reviewer selection
+- [x] **Session Persistence**: Selected reviewer persists across browser sessions
+- [x] **Per-Entity Attribution**: All database operations use session-selected reviewer for audit fields  
+- [x] **Actor Types**: Human reviewer (session-selected), system process, agent execution (distinct userids)
+- [x] **Litigation-Grade Audit**: Complete reviewer attribution chain for legal defensibility
+- [x] **Zero Authentication**: No login, passwords, roles, or authentication infrastructure
+- [x] **Phase Compliance**: Maintains Phase 1 authentication removal constraints
 
 ### Schema Relationships
 
@@ -157,7 +159,6 @@ Defines complete relational database schema for patent intelligence system suppo
 - `'vision_pipeline_pytorch'`: PyTorch vision analysis
 - `'multimodal_llm_synthesis'`: LLM description generation
 - `'vector_cleanup_system'`: Automated vector cleanup
-- `'reprocessing_pipeline'`: Document reprocessing system
 - `'research_agent_[id]'`: Agent-initiated actions
 - User UUID: Manual uploads and human actions
 
