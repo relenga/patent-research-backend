@@ -25,7 +25,7 @@ import uuid
 import statistics
 from collections import defaultdict, deque
 
-from common.concrete_time_service import time_service
+from common.time import time_service
 from common.concrete_id_service import id_service
 from app.core.logger import get_logger
 from app.core.config import get_settings

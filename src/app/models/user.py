@@ -1,9 +1,8 @@
 import uuid as uuid_pkg
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, String, Boolean
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
 from uuid6 import uuid7
 
 from ..core.db.database import Base
@@ -12,19 +11,19 @@ from ..core.db.database import Base
 class User(Base):
     __tablename__ = "user"
 
-    id: Mapped[int] = mapped_column(autoincrement=True, primary_key=True, init=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    name: Mapped[str] = mapped_column(String(30))
-    username: Mapped[str] = mapped_column(String(20), unique=True, index=True)
-    email: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-    hashed_password: Mapped[str] = mapped_column(String)
+    name = Column(String(30), nullable=False)
+    username = Column(String(20), unique=True, index=True, nullable=False)
+    email = Column(String(50), unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
 
-    profile_image_url: Mapped[str] = mapped_column(String, default="https://profileimageurl.com")
-    uuid: Mapped[uuid_pkg.UUID] = mapped_column(UUID(as_uuid=True), default_factory=uuid7, unique=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
-    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
-    is_deleted: Mapped[bool] = mapped_column(default=False, index=True)
-    is_superuser: Mapped[bool] = mapped_column(default=False)
+    profile_image_url = Column(String, default="https://profileimageurl.com", nullable=False)
+    uuid = Column(UUID(as_uuid=True), default=uuid7, unique=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = Column(DateTime(timezone=True), nullable=True, default=None)
+    deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
+    is_deleted = Column(Boolean, default=False, index=True, nullable=False)
+    is_superuser = Column(Boolean, default=False, nullable=False)
 
-    tier_id: Mapped[int | None] = mapped_column(ForeignKey("tier.id"), index=True, default=None, init=False)
+    tier_id = Column(Integer, ForeignKey("tier.id"), index=True, nullable=True, default=None)

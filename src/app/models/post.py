@@ -1,8 +1,8 @@
 import uuid as uuid_pkg
 from datetime import datetime, timezone
 
-from sqlalchemy import UUID, DateTime, ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, String, Boolean
+from sqlalchemy.dialects.postgresql import UUID
 from uuid6 import uuid7
 
 from ..core.db.database import Base
@@ -11,14 +11,14 @@ from ..core.db.database import Base
 class Post(Base):
     __tablename__ = "post"
 
-    id: Mapped[int] = mapped_column("id", autoincrement=True, nullable=False, unique=True, primary_key=True, init=False)
-    created_by_user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), index=True)
-    title: Mapped[str] = mapped_column(String(30))
-    text: Mapped[str] = mapped_column(String(63206))
-    uuid: Mapped[uuid_pkg.UUID] = mapped_column(UUID(as_uuid=True), default_factory=uuid7, unique=True)
-    media_url: Mapped[str | None] = mapped_column(String, default=None)
-
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
-    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
-    is_deleted: Mapped[bool] = mapped_column(default=False, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_by_user_id = Column(Integer, ForeignKey("user.id"), index=True, nullable=False)
+    title = Column(String(30), nullable=False)
+    text = Column(String(63206), nullable=False)
+    uuid = Column(UUID(as_uuid=True), default=uuid7, unique=True, nullable=False)
+    media_url = Column(String, nullable=True, default=None)
+    
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = Column(DateTime(timezone=True), nullable=True, default=None)
+    deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
+    is_deleted = Column(Boolean, default=False, index=True, nullable=False)

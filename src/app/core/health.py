@@ -1,6 +1,5 @@
 import logging
 
-from redis.asyncio import Redis
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,10 +15,11 @@ async def check_database_health(db: AsyncSession) -> bool:
         return False
 
 
-async def check_redis_health(redis: Redis) -> bool:
-    try:
-        await redis.ping()
-        return True
-    except Exception as e:
-        LOGGER.exception(f"Redis health check failed with error: {e}")
-        return False
+# Phase 1 Cleanup: Redis health check removed as Redis/ARQ infrastructure was removed
+# async def check_redis_health(redis: Redis) -> bool:
+#     try:
+#         await redis.ping()
+#         return True
+#     except Exception as e:
+#         LOGGER.exception(f"Redis health check failed with error: {e}")
+#         return False

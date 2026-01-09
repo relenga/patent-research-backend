@@ -22,7 +22,7 @@ from typing import Dict, List, Optional, Set, Any, Union
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
-from common.concrete_time_service import time_service
+from common.time import time_service
 from common.concrete_id_service import id_service
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker

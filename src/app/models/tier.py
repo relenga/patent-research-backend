@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Column, Integer, DateTime, String
 
 from ..core.db.database import Base
 
@@ -9,8 +8,8 @@ from ..core.db.database import Base
 class Tier(Base):
     __tablename__ = "tier"
 
-    id: Mapped[int] = mapped_column("id", autoincrement=True, nullable=False, unique=True, primary_key=True, init=False)
-    name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
-
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False, unique=True)
+    
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = Column(DateTime(timezone=True), nullable=True, default=None)
