@@ -69,6 +69,21 @@ Defines technical implementation of user interfaces for document management, hum
 - **Business rule enforcement occurs at the server layer**
 - **UI state changes reflect server-authoritative state only**
 
+### System Administration Interface
+
+#### Classification Threshold Management
+- **Threshold Configuration**: Per-document-type confidence threshold settings
+- **Default Management**: Global default threshold with type-specific overrides
+- **Real-time Updates**: Immediate application of threshold changes to pending classifications
+- **Historical Analysis**: Classification accuracy metrics by document type and threshold level
+- **Validation Rules**: Threshold range validation (0.50-0.99) with sensible defaults
+
+#### Document Type Management
+- **USPTO Kind Code Mapping**: Visual interface for kind code to document type mapping
+- **Classification Rules**: Business rule configuration for complex document type determination
+- **Subtype Management**: Add/modify document subtypes as new USPTO document types emerge
+- **Agent Prompt Configuration**: UI-editable prompts for Classification Agent per AgentResponsibilities.md
+
 ### Document Management Interface
 
 #### Document Upload & Ingestion

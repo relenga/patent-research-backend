@@ -369,15 +369,19 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 ---
 
 ### P3.3 Document Ingestion Implementation  
-**Maps to PRD:** Phase 3 document processing requirements
+**Maps to PRD:** Phase 3 document processing requirements with Research Agent automation and USPTO classification
 
-**Objective:** Implement document acquisition, normalization, and text extraction using Phase 2 ingestion contracts.
+**Objective:** Implement complete document acquisition pipeline with Research Agent automation and USPTO-aware classification.
 
-**Scope:**
-- File upload handler for multiple document formats
+**Enhanced Scope:**
+- File upload handler for multiple document formats with USPTO metadata preservation
+- **Research Agent Integration**: Multi-asset acquisition from USPTO sources with automatic figure download
+- **Document Classification Agent**: USPTO kind code extraction with patent domain LLM analysis
+- **Stage 1.5 Classification**: Hybrid approach with confidence scoring and HITL escalation
 - Document normalization with text extraction and preservation
-- Metadata extraction and source tagging system
-- Document validation, format checking, and error recovery
+- Enhanced metadata extraction including USPTO bibliographic data and kind codes
+- Source tagging system (manual_upload, research_agent) with detailed attribution
+- Document validation, format checking, and error recovery with classification failure handling
 
 **Explicitly Not In Scope:**
 - Research agent automation (local LLM-based, deferred to Phase 4+)
@@ -428,26 +432,30 @@ All specifications are: **written, internally consistent, cross-referenced, and 
 ---
 
 ### P3.5 Corpus Classification and Storage
-**Maps to PRD:** Phase 3 corpus management requirements
+**Maps to PRD:** Phase 3 corpus management requirements with USPTO hybrid classification
 
-**Objective:** Implement document classification and corpus isolation using Phase 2 corpus contracts.
+**Objective:** Implement USPTO-aware document classification and corpus isolation using hybrid classification approach.
 
-**Scope:**
-- Document type classification and corpus assignment logic
+**Enhanced Scope:**
+- **USPTO Hybrid Classification**: Base types (prosecution, maintenance, applications, patents, prior_art, ptab) + specific USPTO kind codes
+- **Document Classification Agent Integration**: Patent domain expertise with confidence scoring
+- **HITL Classification Review**: Configurable thresholds with human review escalation for low-confidence classifications
+- Corpus assignment logic (Open Patent, Adversarial, Product, Guidance) with USPTO rule integration
 - Corpus isolation enforcement and access controls
-- Corpus integrity validation and health monitoring
-- Document reclassification workflows with audit trails
+- Corpus integrity validation and health monitoring with USPTO metadata validation
+- Document reclassification workflows with audit trails including human classification overrides
 
-**Explicitly Not In Scope:**
-- Automated document classification using ML
-- Content-based similarity or clustering
-- Cross-corpus analytical queries
-- Corpus statistics or analytics dashboards
+**Now In Scope (Previously Excluded):**
+- **Automated document classification using Document Classification Agent with patent domain knowledge**
+- **USPTO kind code extraction and validation**
+- **Confidence-based HITL escalation workflows**
 
 **Acceptance Criteria:**
-- Documents correctly assigned to appropriate corpus
+- Documents correctly classified using USPTO hybrid approach with high accuracy
 - Corpus boundaries strictly enforced in all retrieval operations
-- Document type classification available through UI
+- USPTO kind codes properly extracted and validated
+- Classification confidence tracking with HITL escalation functional
+- Document type classification available through UI with USPTO subtype display
 - Reclassification generates audit events
 - No document appears in multiple corpora simultaneously
 - **Must comply with [Standards.md](Standards.md)**: Common services usage, API standards, configuration patterns, and logging requirements verified

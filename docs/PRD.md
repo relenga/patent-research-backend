@@ -241,13 +241,15 @@ Phase 2 (Harden) may not begin until:
 **Implementation Authorization:** Ready for P3.1 execution upon human authorization
 
 **Planned Implementation Capabilities:**
-- Document upload, normalization, and text extraction (manual upload path)
+- **Document upload, normalization, and text extraction (manual upload path + Research Agent automation)**
+- **Research Agent Integration**: Multi-asset acquisition from USPTO sources with automatic figure download
+- **USPTO-Aware Classification**: Hybrid approach using kind codes + patent domain LLM analysis with confidence scoring
 - OCR processing for images and scanned content with quality scoring
-- Corpus classification and isolation enforcement (Open Patent, Adversarial, Product, Guidance)
+- **Enhanced Corpus Classification**: USPTO hybrid classification (prosecution, maintenance, applications, patents, prior_art, ptab) with isolation enforcement
 - Agent execution within strict corpus and authority boundaries
 - Text chunking, embedding generation, and corpus-aware retrieval
-- Human-in-the-loop task generation, review workflows, and audit trails
-- Basic web interface for document management and human review tasks
+- **Enhanced Human-in-the-loop**: Classification review tasks, configurable confidence thresholds, and audit trails
+- Basic web interface for document management, classification threshold management, and human review tasks
 - Comprehensive system logging and event tracking
 
 **Critical Enforcement Boundaries:**

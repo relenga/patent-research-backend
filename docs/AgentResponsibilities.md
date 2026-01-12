@@ -46,28 +46,43 @@ This document defines **what each agent is allowed to do**, what it **must not d
 ## Agent Responsibility Matrix (Complete Rewrite)
 
 ### Research Agent
-**Primary Function**: Document acquisition from external sources
+**Primary Function**: Multi-asset document acquisition from external sources
 - **Corpus Access**: 🔄 ALL (for assignment purposes only)
 - **Allowed Actions**:
-  - USPTO patent database queries
+  - USPTO patent database queries with full metadata extraction
   - Google Patents API integration (Phase 4+)
-  - Office Action/IPR document retrieval
+  - Office Action/IPR document retrieval with USPTO kind code capture
   - Product documentation acquisition
-  - Source validation and metadata extraction
+  - **Multi-Asset Discovery**: Automatic detection and download of associated images/figures
+  - **USPTO Figure Acquisition**: Download patent drawings and diagrams from USPTO sources
+  - Source validation and metadata extraction with USPTO kind code preservation
 - **UI-Editable Prompts**: ✅ Search targets, source priorities, acquisition scope
 - **Explicit Restrictions**:
   - No document interpretation or analysis
   - No corpus classification decisions (assignment only)
   - No content generation or summarization
-- **Output**: Raw documents with source metadata for downstream processing
+  - Must preserve original USPTO metadata exactly per Standards.md data integrity requirements
+- **Output**: Raw documents with complete source metadata and associated assets for downstream processing
 
 ### Document Classification Agent  
-**Primary Function**: Document type and corpus assignment
+**Primary Function**: USPTO-aware document type and corpus assignment with patent domain expertise
 - **Corpus Access**: 🔄 ALL (for classification purposes only)
 - **Allowed Actions**:
-  - Document type detection (patent, prior_art, office_action, product_doc)
+  - **USPTO Kind Code Extraction**: Direct extraction from USPTO metadata when available
+  - **Patent Domain Analysis**: LLM-based classification using patent prosecution knowledge
+  - Document type detection using hybrid approach (prosecution, maintenance, applications, patents, prior_art, ptab)
+  - Document subtype determination (OA, AANR, B1, A1, PET, etc.)
   - Source type validation (manual_upload, research_agent)
   - Initial corpus assignment per CorpusModel.md rules
+  - **Classification Confidence Scoring**: Generate confidence metrics for HITL escalation
+  - **Fallback Analysis**: Content-based classification when USPTO codes unavailable
+- **UI-Editable Prompts**: ✅ Classification criteria, confidence thresholds, patent domain rules
+- **Explicit Restrictions**:
+  - No content modification or summarization
+  - No corpus rule modifications (follows CorpusModel.md authority)
+  - Must comply with Standards.md classification audit requirements
+- **Output**: Structured classification with confidence metrics and HITL escalation triggers
+- **HITL Integration**: Creates classification review tasks when confidence below configurable thresholds
   - Metadata extraction and normalization
 - **UI-Editable Prompts**: ❌ None (objective classification only)
 - **Explicit Restrictions**:

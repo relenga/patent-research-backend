@@ -167,13 +167,15 @@
   - **Success Criteria**: System ready for research usage with advanced coordination features operational
 
 ## 3.3 Document Ingestion Implementation (P3.3)
-- 3.3.1 Build file upload handler (PDF, XML, HTML, images)
-- 3.3.2 Implement document normalization (extract text, preserve originals)
-- 3.3.3 Add metadata extraction (titles, dates, document types)
-- 3.3.4 Create source tagging (manual_upload, research_agent)
-- 3.3.5 Build document validation and format checking
-- 3.3.6 Add ingestion error handling and recovery
-- **3.3.7 VERIFICATION**: Confirm API standards compliance, common services usage, error handling per ErrorCode enum, and [Standards.md](Standards.md) compliance
+- 3.3.1 Build file upload handler (PDF, XML, HTML, images) with enhanced validation
+- 3.3.2 **Implement Research Agent Integration** (USPTO database queries, multi-asset acquisition, figure download)
+- 3.3.3 **Build Document Classification Agent** (USPTO kind code extraction, patent domain LLM analysis, confidence scoring)
+- 3.3.4 Add metadata extraction (titles, dates, USPTO bibliographic data, kind codes)
+- 3.3.5 Create source tagging (manual_upload, research_agent) with detailed attribution
+- 3.3.6 **Implement Stage 1.5 Classification Pipeline** (automatic trigger, confidence thresholds, HITL escalation)
+- 3.3.7 Build document validation and format checking with USPTO metadata validation
+- 3.3.8 Add ingestion error handling and recovery with classification failure handling
+- **3.3.9 VERIFICATION**: Confirm Research Agent multi-asset acquisition, Classification Agent USPTO accuracy, HITL integration, API standards compliance, common services usage, error handling per ErrorCode enum, and [Standards.md](Standards.md) compliance
 
 ## 3.4 OCR and Image Processing Pipeline (P3.4)
 - 3.4.1 Build image extraction from PDF documents
@@ -185,13 +187,16 @@
 - **3.4.7 VERIFICATION**: Confirm OCR service usage per [Standards.md](Standards.md), common services integration, and logging requirements
 
 ## 3.5 Corpus Classification and Storage (P3.5)
-- 3.5.1 Build document type classification (patent, prior_art, product_doc, office_action)
-- 3.5.2 Implement corpus assignment logic (Open Patent, Adversarial, Product, Guidance)
-- 3.5.3 Add corpus isolation enforcement (prevent cross-corpus retrieval)
-- 3.5.4 Create corpus integrity validation and health checks
-- 3.5.5 Build corpus-specific access controls and permissions
-- 3.5.6 Add document reclassification workflows with audit trails
-- **3.5.7 VERIFICATION**: Confirm corpus isolation enforcement, common services usage, audit logging, and [Standards.md](Standards.md) compliance
+- 3.5.1 **Build USPTO hybrid document type classification** (prosecution, maintenance, applications, patents, prior_art, ptab + USPTO kind code subtypes)
+- 3.5.2 **Implement Classification Agent confidence scoring** (per-type thresholds, HITL escalation triggers)
+- 3.5.3 Implement corpus assignment logic (Open Patent, Adversarial, Product, Guidance) with USPTO rule integration
+- 3.5.4 Add corpus isolation enforcement (prevent cross-corpus retrieval)
+- 3.5.5 **Build classification review HITL workflows** (evidence bundles, human override interface, audit trails)
+- 3.5.6 Create corpus integrity validation and health checks
+- 3.5.7 Build corpus-specific access controls and permissions
+- 3.5.8 **Add USPTO metadata validation** (kind code verification, bibliographic data integrity)
+- 3.5.9 Add document reclassification workflows with audit trails including human classification overrides
+- **3.5.10 VERIFICATION**: Confirm USPTO classification accuracy, corpus isolation enforcement, HITL integration, common services usage, audit logging, and [Standards.md](Standards.md) compliance
 
 ## 3.6 Text Chunking and RAG Infrastructure (P3.6)
 - 3.6.1 Build text chunking strategy (sentence-based, paragraph-based)

@@ -90,6 +90,23 @@ Defines human-in-the-loop task lifecycle, assignment model, evidence bundle stru
 - [ ] **Agent Outputs**: Agent-generated analysis or claims
 - [ ] **Context Information**: Corpus boundaries, agent authorities
 
+#### **Document Classification Evidence Bundles (HIGH Priority Enhancement)**
+**Evidence bundles for USPTO document classification review and validation:**
+
+**Classification Review Bundle:**
+- [ ] **Original Document**: Full document with USPTO headers and metadata
+- [ ] **USPTO Metadata**: Kind codes, publication data, bibliographic information
+- [ ] **Classification Attempts**: Machine classification results with confidence scores
+- [ ] **Similar Documents**: Previously classified documents for comparison context
+- [ ] **Patent Domain Context**: Prosecution history, related applications, examiner patterns
+
+**Human Classification Interface:**
+- [ ] **Document Type Selection**: Dropdown with prosecution/maintenance/applications/patents/prior_art/ptab
+- [ ] **Subtype Selection**: USPTO kind code selection based on document type
+- [ ] **Confidence Override**: Manual confidence assignment with justification requirements
+- [ ] **Classification Rationale**: Mandatory explanation for all human classifications per Standards.md audit requirements
+- [ ] **Similar Document Linking**: Reference to previously classified examples for consistency
+
 #### **Multimodal Processing Evidence Bundles (MEDIUM Priority Enhancement)**
 **Enhanced evidence bundles for OCR and vision processing HITL escalation:**
 

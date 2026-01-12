@@ -28,10 +28,15 @@ erDiagram
         varchar title
         varchar source
         varchar document_type
+        varchar document_subtype
+        varchar uspto_kind_code
         varchar current_state
         varchar document_hash
         jsonb document_structure
         jsonb bibliographic_data
+        decimal classification_confidence
+        varchar classification_method
+        jsonb classification_metadata
         varchar deletion_strategy
         varchar vector_cleanup_status
         timestamp ingestion_timestamp
@@ -148,6 +153,9 @@ All tables in this domain have audit field foreign keys to the System Foundation
 - **Corpus Isolation**: Document-to-corpus assignment via memberships table
 - **Version Control**: Immutable version history with soft delete capabilities
 - **Content Management**: Structured storage for documents, artifacts, and images
+- **USPTO Classification**: Hybrid approach with base types + USPTO kind codes for patent domain accuracy
+- **Classification Confidence**: Machine confidence tracking with HITL escalation for low-confidence classifications
+- **Multi-Asset Support**: Research Agent can acquire documents with associated images in single transaction
 - **Metadata Rich**: JSONB fields for flexible document structure and context
 
 ---

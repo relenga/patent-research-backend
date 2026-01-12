@@ -16,6 +16,135 @@
 
 Defines technical implementation of the complete document processing pipeline: acquisition, normalization, asset extraction, OCR processing, diagram classification, duplicate detection, and human-in-the-loop workflows for patent intelligence system.
 
+## Pipeline Flow Diagram
+
+### Summary State Flow
+```mermaid
+stateDiagram-v2
+    [*] --> INGESTED : Document Upload
+    INGESTED --> CLASSIFIED : Auto/HITL Classification
+    CLASSIFIED --> NORMALIZED : Content Extraction
+    NORMALIZED --> TEXT_EXTRACTED : Asset Extraction
+    TEXT_EXTRACTED --> IMAGES_EXTRACTED : Image Processing
+    IMAGES_EXTRACTED --> HASHED : Hash Generation
+    HASHED --> DUPLICATE_CHECKED : Duplicate Detection
+    
+    DUPLICATE_CHECKED --> DUPLICATE_LINKED : Identical Match
+    DUPLICATE_CHECKED --> BLOCKED : Near Duplicate
+    DUPLICATE_CHECKED --> UNIQUE : No Match
+    
+    UNIQUE --> NEEDS_INTERPRETATION : OCR Processing
+    NEEDS_INTERPRETATION --> BLOCKED : Low Confidence
+    NEEDS_INTERPRETATION --> INTERPRETED : High Confidence
+    
+    BLOCKED --> INTERPRETED : Human Review
+    BLOCKED --> IGNORED : Human Decision
+    
+    INTERPRETED --> CANONICALIZED : Validation
+    CANONICALIZED --> READY : Complete
+    
+    DUPLICATE_LINKED --> READY : Reference Existing
+    IGNORED --> [*] : Excluded
+    READY --> [*] : Vectorization Ready
+    
+    %% Failure Paths
+    INGESTED --> PROCESSING_FAILED : Validation Error
+    CLASSIFIED --> PROCESSING_FAILED : Classification Error
+    NORMALIZED --> PROCESSING_FAILED : Processing Error
+    PROCESSING_FAILED --> [*] : Manual Intervention
+```
+
+### Detailed Pipeline Flow
+```mermaid
+flowchart TD
+    %% Document Intake Paths
+    A[Manual Upload] --> B[Document Validation]
+    C[Research Agent] --> D[Source Validation]
+    B --> E[Raw Artifact Store]
+    D --> E
+    
+    %% Registration & Classification
+    E --> F[Document Registration]
+    F --> G[INGESTED State]
+    G --> H[Document Classification Agent]
+    
+    %% Classification Outcomes
+    H --> I{Classification Confidence}
+    I -->|High Confidence| J[CLASSIFIED State]
+    I -->|Low Confidence| K[HITL Classification Task]
+    K --> L[Human Review]
+    L --> J
+    
+    %% Content Processing
+    J --> M[Content Extraction]
+    M --> N[Text Normalization]
+    N --> O[NORMALIZED State]
+    O --> P[Asset Extraction]
+    P --> Q[TEXT_EXTRACTED State]
+    
+    %% Image Processing Pipeline
+    Q --> R[Image Detection]
+    R --> S[IMAGES_EXTRACTED State]
+    S --> T[OCR Processing]
+    T --> U[HASHED State]
+    U --> V[Duplicate Detection]
+    V --> W[DUPLICATE_CHECKED State]
+    
+    %% Duplicate Handling
+    W --> X{Duplicate Status}
+    X -->|Identical Match| Y[DUPLICATE_LINKED State]
+    X -->|Near Duplicate| Z[BLOCKED State - HITL]
+    X -->|Unique| AA[UNIQUE State]
+    
+    %% OCR & Interpretation
+    AA --> BB[OCR Analysis]
+    BB --> CC{OCR Confidence}
+    CC -->|High Confidence| DD[NEEDS_INTERPRETATION State]
+    CC -->|Low Confidence| EE[BLOCKED State - HITL]
+    
+    %% Human Review Workflows
+    Z --> FF[Human Duplicate Review]
+    EE --> GG[Human OCR Review]
+    FF --> HH[Human Decision]
+    GG --> HH
+    
+    %% Final Processing
+    HH --> II{Human Judgment}
+    II -->|Approve| DD
+    II -->|Ignore| JJ[IGNORED State]
+    DD --> KK[Diagram Classification]
+    KK --> LL[INTERPRETED State]
+    LL --> MM[Final Validation]
+    MM --> NN[CANONICALIZED State]
+    NN --> OO[READY State]
+    
+    %% Failure Paths
+    B -->|Invalid Format| PP[PROCESSING_FAILED]
+    D -->|Network Error| QQ[Retry Queue]
+    QQ -->|Max Retries| PP
+    H -->|Classification Error| PP
+    T -->|OCR Failure| PP
+    
+    %% Terminal States
+    Y --> RR[Available for Vectorization]
+    OO --> RR
+    JJ --> SS[Excluded from Processing]
+    PP --> TT[Manual Intervention Required]
+    
+    %% State Styling
+    classDef processState fill:#e1f5fe
+    classDef decisionState fill:#fff3e0
+    classDef hitlState fill:#fce4ec
+    classDef terminalState fill:#e8f5e8
+    classDef failureState fill:#ffebee
+    
+    class G,J,O,Q,S,U,W,Y,AA,DD,LL,NN,OO processState
+    class I,X,CC,II decisionState
+    class K,Z,EE,FF,GG hitlState
+    class RR,SS terminalState
+    class PP,TT failureState
+```
+
 ## Required Content (Minimum Specification)
 
 ## Stage 1: Document Intake & Registration
@@ -32,16 +161,22 @@ Defines technical implementation of the complete document processing pipeline: a
 #### Research Agent Path (Phase 3 Scope)
 - **Manual Trigger Only**: No automated scheduling or background processing
 - **Source Types**: USPTO database, Google Patents (API keys required)
-- **Document Types**: Patents, Office Actions, IPR decisions, prior art references
+- **Document Types**: Patents, Office Actions, IPR documents, prior art references, maintenance filings
+- **Multi-Asset Acquisition**: Automatic discovery and download of associated images and figures
+- **USPTO Integration**: Full metadata extraction including kind codes, bibliographic data
 - **Validation Logic**: Source authenticity verification, duplicate detection
 - **Rate Limiting**: API usage throttling to prevent service disruption
+- **Output Triggers**: Successful acquisition triggers immediate Document Classification Agent processing
 
 ### Document Registration & Versioning
 
 #### Registration Process
 - **Document ID Generation**: UUID v4 for document identity
 - **Source Type Assignment**: manual_upload | research_agent
-- **Document Type Detection**: patent | office_action | ipr_decision | prior_art | product_doc
+- **Document Type Detection**: prosecution | maintenance | applications | patents | prior_art | ptab (base types)
+- **USPTO Subtype Extraction**: Specific kind codes (OA, AANR, B1, A1, PET, etc.) when available
+- **Classification Confidence**: Machine confidence scoring with HITL escalation thresholds
+- **Classification Method Tracking**: "extracted" (from USPTO metadata) vs "determined" (LLM analysis)
 - **Initial State Assignment**: INGESTED per PipelineStateMachine.md
 - **Corpus Assignment**: Deferred to P3.5 Corpus Classification
 
@@ -50,6 +185,35 @@ Defines technical implementation of the complete document processing pipeline: a
 - **Version Tracking**: Sequential version numbers for document updates
 - **Lineage Recording**: Parent-child relationships for document revisions
 - **Audit Trail**: All registration events with timestamp and source attribution
+
+## Stage 1.5: Document Classification & USPTO Analysis
+
+### Classification Trigger
+- **Automatic Trigger**: Successful document registration triggers Document Classification Agent
+- **Input**: Raw document content + USPTO metadata from Research Agent or manual upload
+- **Processing Priority**: High priority to enable rapid corpus assignment and pipeline routing
+
+### USPTO Metadata Extraction
+- **Kind Code Detection**: Extract USPTO kind codes from document headers and metadata
+- **Bibliographic Analysis**: Parse USPTO publication data, application numbers, dates
+- **Patent Family Identification**: Detect continuation, divisional, and related application relationships
+
+### Classification Processing
+- **Primary Method**: USPTO kind code mapping to base document types
+- **Fallback Method**: LLM content analysis using patent domain knowledge
+- **Confidence Scoring**: Generate classification confidence metrics (0.0-1.0 scale)
+- **Subtype Determination**: Map USPTO codes to specific document subtypes
+
+### HITL Escalation Logic
+- **Confidence Thresholds**: Configurable per document type (default: prosecution=0.85, ptab=0.90, etc.)
+- **Task Creation**: Generate classification review tasks for low-confidence classifications
+- **Evidence Bundle**: Document content + classification attempts + similar document comparisons
+- **Human Override**: Allow manual classification with audit trail per Standards.md requirements
+
+### Pipeline Handoff
+- **State Transition**: INGESTED → CLASSIFIED → NORMALIZED per PipelineStateMachine.md
+- **Corpus Assignment**: Document type determines initial corpus routing per CorpusModel.md
+- **Metadata Enrichment**: Classification data preserved in document_classification_metadata field
 
 ## Stage 2: Content Extraction & Normalization
 
